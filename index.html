@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bias Sorter</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>Bias Sorter</h1>
+        <p>Rank your favorites with ease</p>
+      </header>
+
+      <!-- Input -->
+      <section id="input-screen" class="screen active">
+        <div class="card">
+          <h2>Enter items to rank</h2>
+          <p class="hint">One per line or separated by commas</p>
+          <textarea
+            id="items-input"
+            placeholder="Alice&#10;Bob&#10;Charlie&#10;&#10;or: Alice, Bob, Charlie"
+          ></textarea>
+          <p id="input-error" class="error" hidden></p>
+          <div class="actions">
+            <button type="button" class="btn-secondary" id="import-btn">
+              Import file
+            </button>
+            <button type="button" class="btn-primary" id="start-btn">
+              Start sorting
+            </button>
+          </div>
+          <input type="file" id="file-input" accept=".txt,text/plain" hidden />
+        </div>
+      </section>
+
+      <!-- Sorting -->
+      <section id="sort-screen" class="screen">
+        <div class="card">
+          <div class="sort-header">
+            <h2 id="battle-label">Battle #1</h2>
+            <p class="progress-text" id="progress-text">0% sorted</p>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <p class="hint" style="text-align: center; margin-bottom: 0">
+            Which do you prefer?
+          </p>
+
+          <div class="comparison">
+            <button type="button" class="choice-btn left" id="btn-left"></button>
+
+            <div class="middle-actions">
+              <button type="button" class="btn-equal" id="btn-equal">Equal</button>
+              <button type="button" class="btn-undo" id="btn-undo" disabled>
+                Undo
+              </button>
+            </div>
+
+            <button type="button" class="choice-btn right" id="btn-right"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section id="results-screen" class="screen">
+        <div class="card">
+          <div class="sort-header">
+            <h2>Your rankings</h2>
+            <p class="progress-text">100% sorted</p>
+          </div>
+
+          <ol class="results-list" id="results-list"></ol>
+
+          <div class="actions">
+            <button type="button" class="btn-secondary" id="copy-btn">
+              Copy list
+            </button>
+            <button type="button" class="btn-secondary" id="save-btn">
+              Save to file
+            </button>
+            <button type="button" class="btn-primary" id="restart-btn">
+              Start over
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="sorter.js"></script>
+    <script>
+      let logic = null;
+      let battleCount = 0;
+      let finalRanking = [];
+
+      const screens = {
+        input: document.getElementById("input-screen"),
+        sort: document.getElementById("sort-screen"),
+        results: document.getElementById("results-screen"),
+      };
+
+      const itemsInput = document.getElementById("items-input");
+      const inputError = document.getElementById("input-error");
+      const battleLabel = document.getElementById("battle-label");
+      const progressText = document.getElementById("progress-text");
+      const progressFill = document.getElementById("progress-fill");
+      const btnLeft = document.getElementById("btn-left");
+      const btnRight = document.getElementById("btn-right");
+      const btnEqual = document.getElementById("btn-equal");
+      const btnUndo = document.getElementById("btn-undo");
+      const resultsList = document.getElementById("results-list");
+
+      function showScreen(name) {
+        Object.values(screens).forEach((el) => el.classList.remove("active"));
+        screens[name].classList.add("active");
+      }
+
+      function showError(message) {
+        inputError.textContent = message;
+        inputError.hidden = !message;
+      }
+
+      function startSorting() {
+        const items = parseItems(itemsInput.value);
+
+        if (items.length < 2) {
+          showError("Please enter at least 2 items to sort.");
+          return;
+        }
+
+        showError("");
+        logic = new MergeSortLogic(items);
+        battleCount = 0;
+        showScreen("sort");
+        refreshSortUI();
+      }
+
+      function handleChoice(choice) {
+        if (choice === "undo") {
+          if (logic.undo()) {
+            battleCount = Math.max(0, battleCount - 1);
+            refreshSortUI();
+          }
+          return;
+        }
+
+        logic.recordChoice(choice);
+        battleCount++;
+        refreshSortUI();
+      }
+
+      function refreshSortUI() {
+        const pair = logic.getNextPair();
+
+        if (!pair) {
+          finalRanking = logic.getFinalRanking();
+          showResults(finalRanking);
+          return;
+        }
+
+        const [left, right] = pair;
+        btnLeft.textContent = left;
+        btnRight.textContent = right;
+
+        battleLabel.textContent = `Battle #${battleCount + 1}`;
+        const progress = logic.getProgress();
+        progressText.textContent = `${Math.round(progress)}% sorted`;
+        progressFill.style.width = `${progress}%`;
+        btnUndo.disabled = !logic.canUndo();
+      }
+
+      function showResults(ranking) {
+        resultsList.innerHTML = ranking
+          .map(
+            (item, i) =>
+              `<li><span class="rank">${i + 1}.</span> ${escapeHtml(item)}</li>`
+          )
+          .join("");
+        showScreen("results");
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function copyResults() {
+        const text = finalRanking
+          .map((item, i) => `${i + 1}. ${item}`)
+          .join("\n");
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById("copy-btn");
+          const original = btn.textContent;
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = original), 2000);
+        });
+      }
+
+      function saveResults() {
+        const text =
+          "--- Your Ranked List ---\n\n" +
+          finalRanking.map((item, i) => `${i + 1}. ${item}`).join("\n");
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "rankings.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      document.getElementById("start-btn").addEventListener("click", startSorting);
+      document.getElementById("import-btn").addEventListener("click", () => {
+        document.getElementById("file-input").click();
+      });
+      document.getElementById("file-input").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          itemsInput.value = reader.result;
+          showError("");
+        };
+        reader.readAsText(file);
+        e.target.value = "";
+      });
+
+      btnLeft.addEventListener("click", () => handleChoice(0));
+      btnRight.addEventListener("click", () => handleChoice(1));
+      btnEqual.addEventListener("click", () => handleChoice("equal"));
+      btnUndo.addEventListener("click", () => handleChoice("undo"));
+
+      document.getElementById("copy-btn").addEventListener("click", copyResults);
+      document.getElementById("save-btn").addEventListener("click", saveResults);
+      document.getElementById("restart-btn").addEventListener("click", () => {
+        showScreen("input");
+      });
+    </script>
+  </body>
+</html>
