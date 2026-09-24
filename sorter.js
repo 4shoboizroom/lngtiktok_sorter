@@ -108,13 +108,13 @@ class MergeSortLogic {
   }
 
   getFinalRanking() {
-    return this.queue[0] ?? [];
+    return this.queue ?? [];
   }
 }
 
 function parseItems(text) {
   return text
-    .split(/[,\n]+/)
+    .split("\n")
     .map((s) => s.trim())
     .filter(Boolean);
 }
