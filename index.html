@@ -162,8 +162,9 @@
         }
 
         const [left, right] = pair;
-        btnLeft.textContent = left;
-        btnRight.textContent = right;
+btnLeft.innerHTML = left;
+btnRight.innerHTML = right;
+
 
         battleLabel.textContent = `Battle #${battleCount + 1}`;
         const progress = logic.getProgress();
