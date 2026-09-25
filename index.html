@@ -119,12 +119,12 @@ function getTikTokHTML(index) {
   
     const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
 return `
-  <div class="video-card-wrapper" style="width: 100%; max-width: 340px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
+  <div class="video-card-wrapper" style="width: 100%; max-width: 420px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Контейнер-маска задает нужную вертикальную высоту и скрывает лишнее -->
-    <div style="position: relative; width: 100%; height: 580px; overflow: hidden; background: #000; border-radius: 8px;">
+    <!-- Контейнер стал шире (до 420px) и заметно выше (680px) -->
+    <div style="position: relative; width: 100%; height: 680px; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- iframe сильнее растягивается вширь (2.4), чтобы убрать толстые черные поля гугл-диска -->
+      <!-- Увеличили масштаб плеера до scale(3.2, 1.5), чтобы он полностью перекрыл новые размеры маски -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
@@ -134,7 +134,7 @@ return `
           left: 50%;
           width: 100%;
           height: 100%;
-          transform: translate(-50%, -50%) scale(2.4, 1.35);
+          transform: translate(-50%, -50%) scale(3.2, 1.5);
           border: none;
         ">
       </iframe>
