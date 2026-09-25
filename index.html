@@ -99,30 +99,22 @@
       }
 
       function showError(message) {
-        inputError.textContent = message;
-        inputError.hidden = !message;
-      }
-
-      function startSorting() {
-  const items = parseItems("");
-
-  if (items.length < 2) {
-    showError("Please enter at least 2 items to sort.");
-    return;
+  const inputError = document.getElementById("input-error");
+  if (inputError) {
+    inputError.textContent = message;
+    inputError.hidden = !message;
   }
-
-  logic = new MergeSortLogic(items);
-  showNextPair();
 }
 
 function startSorting() {
   showError("");
-  const items = parseItems(""); // добавляем эту строчку, чтобы сайт подтянул список тиктоков
+  const items = parseItems(""); 
   logic = new MergeSortLogic(items);
   battleCount = 0;
   showScreen("sort");
   refreshSortUI();
 }
+
 
       function handleChoice(choice) {
         if (choice === "undo") {
