@@ -117,8 +117,9 @@ function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
   
-  const videoUrl = `https://google.com{item.id}`;
-  
+  const embedUrl = `https://google.com{item.id}/preview`;
+  return `<iframe src="${embedUrl}" width="100%" height="400" frameborder="0" allow="autoplay"></iframe><div class="desc">${item.desc}</div>`;
+
   return `
     <video src="${videoUrl}" controls width="100%" preload="metadata" playsinline>
       Ваш браузер не поддерживает тег видео.
