@@ -254,34 +254,35 @@ function getTikTokHTML(index) {
         URL.revokeObjectURL(url);
       }
 
-      document.getElementById("start-btn").addEventListener("click", startSorting);
-      document.getElementById("import-btn").addEventListener("click", () => {
-        document.getElementById("file-input").click();
-      });
-      document.getElementById("file-input").addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          itemsInput.value = reader.result;
-          showError("");
-        };
-        reader.readAsText(file);
-        e.target.value = "";
-      });
+     // проверяем старые кнопки — если их нет на странице, скрипт их просто пропустит
+const startBtn = document.getElementById("start-btn");
+if (startBtn) startBtn.addEventListener("click", startSorting);
 
-      btnLeft.addEventListener("click", () => handleChoice(0));
-      btnRight.addEventListener("click", () => handleChoice(1));
-      btnEqual.addEventListener("click", () => handleChoice("equal"));
-      btnUndo.addEventListener("click", () => handleChoice("undo"));
+const importBtn = document.getElementById("import-btn");
+if (importBtn) importBtn.addEventListener("click", () => {
+  const fileInput = document.getElementById("file-input");
+  if (fileInput) fileInput.click();
+});
 
-      document.getElementById("copy-btn").addEventListener("click", copyResults);
-      document.getElementById("save-btn").addEventListener("click", saveResults);
-      document.getElementById("restart-btn").addEventListener("click", () => {
-        showScreen("input");
-      });
+const fileInput = document.getElementById("file-input");
+if (fileInput) fileInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const text = event.target.result;
+    const items = parseItems(text);
+    startSorting();
+  };
+  reader.readAsText(file);
+});
 
-      startSorting();
-    </script>
-  </body>
+document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
+document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
+document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
+document.getElementById("btn-undo").addEventListener("click", () => handleChoice("undo"));
+
+startSorting();
+</script>
+</body>
 </html>
