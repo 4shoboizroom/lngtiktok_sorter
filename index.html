@@ -124,12 +124,16 @@
       }
 
       function startSorting() {
-        const items = parseItems(itemsInput.value);
+  const items = parseItems("");
 
-        if (items.length < 2) {
-          showError("Please enter at least 2 items to sort.");
-          return;
-        }
+  if (items.length < 2) {
+    showError("Please enter at least 2 items to sort.");
+    return;
+  }
+
+  logic = new MergeSortLogic(items);
+  showNextPair();
+}
 
         showError("");
         logic = new MergeSortLogic(items);
@@ -240,6 +244,11 @@ btnRight.innerHTML = right;
       document.getElementById("restart-btn").addEventListener("click", () => {
         showScreen("input");
       });
+      document.addEventListener("DOMContentLoaded", () => {
+  showScreen("sort");
+  startSorting();
+});
+
     </script>
   </body>
 </html>
