@@ -117,14 +117,14 @@ function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
   
-          const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
+    const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
 return `
-  <div class="video-card-wrapper" style="width: 100%; max-width: 320px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px; border: 1px solid #e0e0e0;">
+  <div class="video-card-wrapper" style="width: 100%; max-width: 340px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Контейнер-маска, который скроет все лишнее, что выйдет за рамки -->
-    <div style="position: relative; width: 100%; height: 500px; overflow: hidden; background: #000;">
+    <!-- Контейнер-маска задает нужную вертикальную высоту и скрывает лишнее -->
+    <div style="position: relative; width: 100%; height: 580px; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- iframe с зумом, который заставит видео занять всю ширину -->
+      <!-- iframe сильнее растягивается вширь (2.4), чтобы убрать толстые черные поля гугл-диска -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
@@ -134,14 +134,14 @@ return `
           left: 50%;
           width: 100%;
           height: 100%;
-          transform: translate(-50%, -50%) scale(1.4); /* Увеличиваем масштаб пропорционально */
+          transform: translate(-50%, -50%) scale(2.4, 1.35);
           border: none;
         ">
       </iframe>
       
     </div>
 
-    <div class="desc" style="text-align: center; margin-top: 12px; font-size: 14px; padding: 0 8px 12px;">${item.desc}</div>
+    <div class="desc" style="text-align: center; margin-top: 10px; font-size: 14px;">${item.desc}</div>
   </div>
 `;
    }
