@@ -14,29 +14,9 @@
       </header>
 
       <!-- Input -->
-      <section id="input-screen" class="screen active">
-        <div class="card">
-          <h2>Enter items to rank</h2>
-          <p class="hint">One per line or separated by commas</p>
-          <textarea
-            id="items-input"
-            placeholder="Alice&#10;Bob&#10;Charlie&#10;&#10;or: Alice, Bob, Charlie"
-          ></textarea>
-          <p id="input-error" class="error" hidden></p>
-          <div class="actions">
-            <button type="button" class="btn-secondary" id="import-btn">
-              Import file
-            </button>
-            <button type="button" class="btn-primary" id="start-btn">
-              Start sorting
-            </button>
-          </div>
-          <input type="file" id="file-input" accept=".txt,text/plain" hidden />
-        </div>
-      </section>
 
       <!-- Sorting -->
-      <section id="sort-screen" class="screen">
+      <section id="sort-screen" class="screen active">
         <div class="card">
           <div class="sort-header">
             <h2 id="battle-label">Battle #1</h2>
@@ -244,26 +224,8 @@ btnRight.innerHTML = right;
       document.getElementById("restart-btn").addEventListener("click", () => {
         showScreen("input");
       });
-      document.addEventListener("DOMContentLoaded", () => {
-  // принудительно прячем стартовое окно со страницы
-  const inputScreen = document.getElementById("input-screen");
-  if (inputScreen) {
-    inputScreen.classList.remove("active");
-    inputScreen.style.display = "none";
-  }
 
-  // принудительно включаем экран для битвы видео
-  const sortScreen = document.getElementById("sort-screen");
-  if (sortScreen) {
-    sortScreen.classList.add("active");
-    sortScreen.style.display = "block";
-  }
-
-  // запускаем саму игру с вашими 59 тиктоками
-  startSorting();
-});
-
-
+      startSorting();
     </script>
   </body>
 </html>
