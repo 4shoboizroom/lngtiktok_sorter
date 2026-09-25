@@ -145,9 +145,10 @@
           return;
         }
 
-        const [left, right] = pair;
-btnLeft.innerHTML = left;
-btnRight.innerHTML = right;
+          const [left, right] = pair;
+  btnLeft.innerHTML = getTikTokHTML(left);
+  btnRight.innerHTML = getTikTokHTML(right);
+
         
 
 
@@ -159,12 +160,13 @@ btnRight.innerHTML = right;
       }
 
       function showResults(ranking) {
-        resultsList.innerHTML = ranking
-          .map(
-            (item, i) =>
-              `<li><span class="rank">${i + 1}.</span> ${escapeHtml(item)}</li>`
-          )
-          .join("");
+         resultsList.innerHTML = ranking
+    .map(
+      (item, i) =>
+        `<li><span class="rank">${i + 1}.</span> ${getTikTokHTML(item)}</li>`
+    )
+    .join("");
+
         showScreen("results");
       }
 
