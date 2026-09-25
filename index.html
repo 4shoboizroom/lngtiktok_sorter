@@ -115,8 +115,9 @@
   showNextPair();
 }
 
-      function startSorting() {
+function startSorting() {
   showError("");
+  const items = parseItems(""); // добавляем эту строчку, чтобы сайт подтянул список тиктоков
   logic = new MergeSortLogic(items);
   battleCount = 0;
   showScreen("sort");
