@@ -332,12 +332,6 @@ function startSorting() {
   { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "подпись: история повторяется" }
 ];
 
-function getTikTokHTML(index) {
-  const item = tiktoks[index];
-  if (!item) return "";
-  return `<video src="https://google.com{item.id}" controls width="100%"></video><div class="desc">${item.desc}</div>`;
-}
-      
       function showResults(ranking) {
          resultsList.innerHTML = ranking
     .map(
