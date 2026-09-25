@@ -121,10 +121,10 @@ function getTikTokHTML(index) {
 return `
   <div class="video-card-wrapper" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Контейнер-маска задает правильные пропорции карточки -->
+    <!-- Контейнер-маска сайта (9:16) -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- scale(1.0, 1.0) полностью убирает горизонтальное растяжение и возвращает оригинальные пропорции -->
+      <!-- scale(0.7, 1.0) сузит горизонтальный плеер Диска, вернув кнопку Play в центр, а height: 140% откроет верх и низ видео -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
@@ -133,8 +133,8 @@ return `
           top: 50%;
           left: 50%;
           width: 100%;
-          height: 100%;
-          transform: translate(-50%, -50%) scale(1.0, 1.0);
+          height: 140%;
+          transform: translate(-50%, -50%) scale(0.7, 1.0);
           border: none;
         ">
       </iframe>
