@@ -93,10 +93,21 @@
       const btnUndo = document.getElementById("btn-undo");
       const resultsList = document.getElementById("results-list");
 
-      function showScreen(name) {
-        Object.values(screens).forEach((el) => el.classList.remove("active"));
-        screens[name].classList.add("active");
+     function showScreen(screenId) {
+  const screens = ["input", "sort", "results"];
+  screens.forEach((id) => {
+    const screen = document.getElementById(`${id}-screen`);
+    if (screen) {
+      if (id === screenId) {
+        screen.classList.add("active");
+        screen.style.display = "block";
+      } else {
+        screen.classList.remove("active");
+        screen.style.display = "none";
       }
+    }
+  });
+}
 
 function parseItems(text) {
   return tiktoks.map((_, index) => index);
