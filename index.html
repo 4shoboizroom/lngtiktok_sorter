@@ -119,12 +119,13 @@ function getTikTokHTML(index) {
   
    const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
 return `
-  <div class="video-card-wrapper" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
+  <!-- Увеличили max-width контейнера до 380px, чтобы он стал шире -->
+  <div class="video-card-wrapper" style="width: 100%; max-width: 380px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Контейнер-маска (пропорции 9:16) -->
+    <!-- padding-bottom: 177.77% автоматически сделает контейнер выше, сохраняя идеальные пропорции 9:16 -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- width: 100% и height: 100% без scale вернут парней в кадр в полный рост и без искажения лиц -->
+      <!-- Чистый iframe без искажений и scale просто заполняет расширенный контейнер -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
