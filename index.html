@@ -117,13 +117,9 @@ function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
   
-  const embedUrl = `https://google.com{item.id}/preview`;
-  return `<iframe src="${embedUrl}" width="100%" height="400" frameborder="0" allow="autoplay"></iframe><div class="desc">${item.desc}</div>`;
-
+    const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
   return `
-    <video src="${videoUrl}" controls width="100%" preload="metadata" playsinline>
-      Ваш браузер не поддерживает тег видео.
-    </video>
+    <iframe src="${embedUrl}" width="100%" height="400" frameborder="0" allow="autoplay" style="border-radius: 8px;"></iframe>
     <div class="desc">${item.desc}</div>
   `;
 }
