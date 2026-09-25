@@ -118,7 +118,7 @@ function getTikTokHTML(index) {
   if (!item) return "";
   
     const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
-            const videoUrl = `https://google.com{item.id}&view=1`;
+            const videoUrl = `https://docs.google.com/file/d/${item.id}&view=1`;
   return `
     <video src="${videoUrl}" controls width="100%" style="border-radius: 8px; aspect-ratio: 9/16; max-width: 340px; margin: 0 auto; display: block;" preload="metadata" playsinline>
       ваш браузер не поддерживает тег видео.
