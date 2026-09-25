@@ -115,12 +115,13 @@
   showNextPair();
 }
 
-        showError("");
-        logic = new MergeSortLogic(items);
-        battleCount = 0;
-        showScreen("sort");
-        refreshSortUI();
-      }
+      function startSorting() {
+  showError("");
+  logic = new MergeSortLogic(items);
+  battleCount = 0;
+  showScreen("sort");
+  refreshSortUI();
+}
 
       function handleChoice(choice) {
         if (choice === "undo") {
