@@ -116,7 +116,9 @@ function parseItems(text) {
 function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
-  return `<video src="https://google.com{item.id}" controls width="100%"></video><div class="desc">${item.desc}</div>`;
+  return `<video src="https://docs.google.com/uc?export=download&id=${item.id}" controls width="100%"></video><div class="desc">${item.desc}</div>`;
+
+
 }
 
       function showError(message) {
