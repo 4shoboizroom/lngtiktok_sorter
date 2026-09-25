@@ -148,6 +148,7 @@
         const [left, right] = pair;
 btnLeft.innerHTML = left;
 btnRight.innerHTML = right;
+        
 
 
         battleLabel.textContent = `Battle #${battleCount + 1}`;
@@ -167,11 +168,9 @@ btnRight.innerHTML = right;
         showScreen("results");
       }
 
-      function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-      }
+     function escapeHtml(text) {
+  return text;
+}
 
       function copyResults() {
         const text = finalRanking
