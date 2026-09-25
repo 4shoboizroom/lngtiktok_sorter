@@ -118,13 +118,14 @@ function getTikTokHTML(index) {
   if (!item) return "";
   
    const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
+const embedUrl = `https://google.com{item.id}/preview`;
 return `
   <div class="video-card-wrapper" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Контейнер-маска сайта (9:16) -->
+    <!-- Контейнер-маска (9:16) -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- scale(0.7, 1.0) сузит горизонтальный плеер Диска, вернув кнопку Play в центр, а height: 140% откроет верх и низ видео -->
+      <!-- scale(2.3, 1.0) растянет плеер вширь, убирая черные бока, а height: 100% вернет голову и ноги в кадр -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
@@ -133,8 +134,8 @@ return `
           top: 50%;
           left: 50%;
           width: 100%;
-          height: 140%;
-          transform: translate(-50%, -50%) scale(0.7, 1.0);
+          height: 100%;
+          transform: translate(-50%, -50%) scale(2.3, 1.0);
           border: none;
         ">
       </iframe>
