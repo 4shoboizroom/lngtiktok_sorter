@@ -245,9 +245,24 @@ btnRight.innerHTML = right;
         showScreen("input");
       });
       document.addEventListener("DOMContentLoaded", () => {
-  showScreen("sort");
+  // принудительно прячем стартовое окно со страницы
+  const inputScreen = document.getElementById("input-screen");
+  if (inputScreen) {
+    inputScreen.classList.remove("active");
+    inputScreen.style.display = "none";
+  }
+
+  // принудительно включаем экран для битвы видео
+  const sortScreen = document.getElementById("sort-screen");
+  if (sortScreen) {
+    sortScreen.classList.add("active");
+    sortScreen.style.display = "block";
+  }
+
+  // запускаем саму игру с вашими 59 тиктоками
   startSorting();
 });
+
 
     </script>
   </body>
