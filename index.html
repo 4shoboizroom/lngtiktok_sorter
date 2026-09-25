@@ -124,7 +124,7 @@ return `
     <!-- Контейнер-маска с TikTok-пропорциями (9:16) -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- scale(2.0, 1.15) делает видео в два раза шире и немного выше, убирая боковые полосы плеера -->
+      <!-- Масштаб по ширине уменьшен в два раза (с 2.0 до 1.0) -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
@@ -134,7 +134,7 @@ return `
           left: 50%;
           width: 100%;
           height: 100%;
-          transform: translate(-50%, -50%) scale(2.0, 1.15);
+          transform: translate(-50%, -50%) scale(1.0, 1.15);
           border: none;
         ">
       </iframe>
