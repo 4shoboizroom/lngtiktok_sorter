@@ -400,6 +400,16 @@ function saveResults() {
     setTimeout(() => (btn.textContent = original), 2000);
   });
 }
+      // Жестко привязываем запуск функций к кликам по кнопкам
+// Перехватываем клики по кнопкам в любой момент их появления на странице
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id === "copy-btn") {
+    copyResults();
+  }
+  if (event.target && event.target.id === "save-btn") {
+    saveResults();
+  }
+});
 
 const startBtn = document.getElementById("start-btn");
 if (startBtn) startBtn.addEventListener("click", startSorting);
