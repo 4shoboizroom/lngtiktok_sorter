@@ -476,7 +476,7 @@ if (resultData) {
   startSorting();
 }
     
-    const usernameContainer = document.getElementById("username-container");
+      const usernameContainer = document.getElementById("username-container");
     const restartBtn = document.getElementById("restart-btn");
     
     if (usernameContainer) {
@@ -484,14 +484,11 @@ if (resultData) {
       if (usernameContainer.style.display === "none" || !userData) {
         if (restartBtn) {
           restartBtn.textContent = "try it yourself";
-          // при клике на «try it yourself» просто перекидываем на чистый сортер без параметров в URL
-          restartBtn.onclick = () => {
-            window.location.href = window.location.origin + window.location.pathname;
-          };
         }
       }
     }
   } else {
+    // если массив пустой или битый — запускаем обычную игру
     startSorting();
   }
 } else {
