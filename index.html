@@ -117,24 +117,24 @@ function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
   
- const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
+const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
 return `
   <div class="video-card-wrapper" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
     <!-- вертикальный контейнер-маска сайта 9:16 -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- делаем iframe широким (315%), чтобы спрятать боковые поля диска, и центрируем саму кнопку play -->
+      <!-- scale(3.15, 0.85) сужает плеер по вертикали на мобильных, чтобы кнопки ушли с самого видео контента -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
         style="
           position: absolute;
-          top: 0;
+          top: 50%;
           left: 50%;
           width: 315%;
           height: 100%;
-          transform: translateX(-50%);
+          transform: translate(-50%, -50%) scale(1.0, 0.85);
           border: none;
         ">
       </iframe>
