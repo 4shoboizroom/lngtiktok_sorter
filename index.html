@@ -487,9 +487,10 @@ if (resultData) {
         }
       }
     }
-} else {
+else {
   // если параметров в ссылке нет — это обычная игра, запускаем баттлы
   startSorting();
+}
 
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
