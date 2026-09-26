@@ -481,11 +481,11 @@ if (resultData) {
     
     if (usernameContainer) {
       // если мы зашли по ссылке результатов И контейнер инпута скрыт — значит, это чужой результат!
-      if (usernameContainer.style.display === "none" || !userData) {
-        if (restartBtn) {
-          restartBtn.textContent = "try it yourself";
-        }
-      }
+          if (userData) {
+      if (restartBtn) restartBtn.textContent = "Try it yourself";
+    } else {
+      if (restartBtn) restartBtn.textContent = "Start over";
+    }
     }
 else {
   // если параметров в ссылке нет — это обычная игра, запускаем баттлы
