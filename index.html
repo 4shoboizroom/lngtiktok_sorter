@@ -453,16 +453,14 @@ if (importBtn) importBtn.addEventListener("click", () => {
   if (fileInput) fileInput.click();
 });
 
-        reader.onload = (event) => {
+         reader.onload = (event) => {
     const text = event.target.result;
-    items = parseItems(text); // Наш массив видео заполнился данными!
+    items = parseItems(text);
 
-    // Сразу проверяем, не зашли ли мы по ссылке с готовым результатом
     const urlParams = new URLSearchParams(window.location.search);
     const resultData = urlParams.get('result');
 
     if (resultData) {
-      // Если ссылка с цифрами есть, парсим их и выводим топ
       const orderedIndices = resultData.split(',').map(Number);
       finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
       
@@ -470,16 +468,13 @@ if (importBtn) importBtn.addEventListener("click", () => {
       if (mainContainer) mainContainer.style.display = "none";
       
       showResults();
-        } else {
-      // Если ссылки нет — запускаем обычные баттлы с видео
+    } else {
       startSorting();
     }
-  }; // <--- ВОТ СЮДА переносим закрытие функции reader.onload
-  reader.readAsText(file); // <--- теперь метод чтения стоит снаружи, как и должен
-  });
-}
+  };
+  reader.readAsText(file);
+};
 
-// Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
