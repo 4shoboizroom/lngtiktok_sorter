@@ -374,22 +374,47 @@ function startSorting() {
   return text;
 }
 
+// Функция для упаковки массива ID в короткую Base64 строку
+function packResults(arr) {
+  const bytes = new Uint8Array(arr);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+\$/, '');
+}
+
+// Функция для распаковки строки обратно в массив ID
+function unpackResults(str) {
+  try {
+    // Восстанавливаем символы Base64
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) { base64 += '='; }
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return Array.from(bytes);
+  } catch (e) {
+    console.error("Ошибка чтения ссылки результатов:", e);
+    return null;
+  }
+}
+
 function saveResults() {
-  // 1. Получаем имя из инпута и очищаем от лишних пробелов
   const usernameInput = document.getElementById("username-input");
   const username = usernameInput ? usernameInput.value.trim() : "";
   
-  // 2. Собираем индексы видео
-  const idsParam = finalRanking.map(item => encodeURIComponent(item)).join(',');
+  // Упаковываем массив чисел в компактную строку
+  const packedData = packResults(finalRanking);
   
-  // 3. Формируем красивую ссылку. Если имя введено, добавляем параметр user
   let shareUrl = `${window.location.origin}${window.location.pathname}?`;
   if (username) {
     shareUrl += `user=${encodeURIComponent(username)}&`;
   }
-  shareUrl += `result=${idsParam}`;
+  shareUrl += `r=${packedData}`; // Теперь параметр называется коротко 'r'
   
-  // Копируем именную ссылку в буфер обмена
   navigator.clipboard.writeText(shareUrl).then(() => {
     const btn = document.getElementById("save-btn");
     const original = btn.textContent;
@@ -398,7 +423,6 @@ function saveResults() {
   });
 }
 
-// Делегирование кликов
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id === "save-btn") {
     saveResults();
@@ -407,31 +431,36 @@ document.addEventListener("click", (event) => {
 
 // Проверяем адресную строку строго при загрузке страницы
 const urlParams = new URLSearchParams(window.location.search);
-const resultData = urlParams.get('result');
-const userData = urlParams.get('user'); // Получаем имя из ссылки
+// Поддерживаем и старый параметр 'result', и новый сжатый 'r'
+const resultData = urlParams.get('r') || urlParams.get('result');
+const userData = urlParams.get('user');
 
 if (resultData) {
-  // Если зашли по ссылке топа (?result=24,25,26...)
-  const orderedIndices = resultData.split(',').map(Number);
+  let orderedIndices = [];
   
-  finalRanking = orderedIndices;
-  
-  // Сразу отрисовываем готовый топ на экране результатов
-  showResults(finalRanking);
-  
-  // Меняем заголовок, если в ссылке передали имя
-  const resultsHeader = document.getElementById("results-title");
-  if (resultsHeader && userData) {
-    const decodedName = decodeURIComponent(userData); 
-    resultsHeader.textContent = `${decodedName}'s results`;
+  if (resultData.includes(',')) {
+    // Старый формат (через запятую)
+    orderedIndices = resultData.split(',').map(Number);
+  } else {
+    // Новый сжатый формат
+    orderedIndices = unpackResults(resultData);
   }
   
-  // Полностью прячем блок ввода ника для тех, кто просто смотрит чужой результат
-  const usernameContainer = document.getElementById("username-container");
-  if (usernameContainer) usernameContainer.style.display = "none";
-
+  if (orderedIndices && orderedIndices.length > 0) {
+    finalRanking = orderedIndices;
+    showResults(finalRanking);
+    
+    const resultsHeader = document.getElementById("results-title");
+    if (resultsHeader && userData) {
+      resultsHeader.textContent = `${decodeURIComponent(userData)}'s results`;
+    }
+    
+    const usernameContainer = document.getElementById("username-container");
+    if (usernameContainer) usernameContainer.style.display = "none";
+  } else {
+    startSorting();
+  }
 } else {
-  // Если ссылки нет — сразу запускаем обычные баттлы с видео
   startSorting();
 }
 
