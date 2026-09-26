@@ -372,7 +372,7 @@ function startSorting() {
   return text;
 }
 
-     function copyResults() {
+  function copyResults() {
   const text = finalRanking
     .map((item, i) => `${i + 1}. ${item}`)
     .join("\n");
@@ -385,23 +385,23 @@ function startSorting() {
 }
 
 function saveResults() {
-  // собираем все id или названия из твоего массива finalRanking
-  // если в finalRanking лежат строки, используем encodeURIComponent
-  const idsParam = finalRanking.map(item => encodeURIComponent(item)).join(',');
+  // Собираем индексы из твоего списка результатов в строку через запятую
+  const idsParam = finalRanking.map(item => {
+    // Если в finalRanking лежат объекты, вытаскиваем их индекс из исходного массива (например, items)
+    // Если там уже лежат просто индексы/строки, оставляем как есть
+    const index = typeof item === 'object' ? items.indexOf(item) : item;
+    return encodeURIComponent(index);
+  }).join(',');
   
-  // генерируем автоматическую ссылку на твой гитхаб-сайт с результатом топа
+  // Генерируем ссылку на твой сайт с результатом
   const shareUrl = `${window.location.origin}${window.location.pathname}?result=${idsParam}`;
   
-  // копируем готовую ссылку в буфер обмена
+  // Копируем ссылку в буфер обмена
   navigator.clipboard.writeText(shareUrl).then(() => {
-    const btn = document.getElementById("save-btn"); // или какой id у кнопки скачивания
+    const btn = document.getElementById("save-btn");
     const original = btn.textContent;
     btn.textContent = "Link Copied!";
-    setTimeout(() => (btn.textContent = original), 2000);
-  });
-}
-      // Жестко привязываем запуск функций к кликам по кнопкам
-// Перехватываем клики по кнопкам в любой момент их появления на странице
+   // Ловим клики по кнопкам результатов, как только они рендерятся на странице
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id === "copy-btn") {
     copyResults();
@@ -410,6 +410,39 @@ document.addEventListener("click", (event) => {
     saveResults();
   }
 });
+
+  if (event.target && event.target.id === "save-btn") {
+    saveResults();
+  }
+});
+
+  // Проверяем ссылку при открытии сайта
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const resultData = urlParams.get('result');
+  
+  // Если кто-то зашел по ссылке топа (?result=24,25,26...)
+  if (resultData) {
+    const orderedIndices = resultData.split(',').map(Number);
+    
+    // 1. Прячем стартовый экран (замени 'start-screen' на реальный ID своего стартового блока)
+    const startScreen = document.getElementById("start-screen");
+    if (startScreen) startScreen.style.display = "none";
+    
+    // 2. Очищаем массив результатов и наполняем его согласно ссылке
+    // Замени 'items' на имя твоего исходного массива с 44 видео, если оно отличается
+    finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
+    
+    // 3. Вызываем твою стандартную функцию, которая отрисовывает финальный экран результатов
+    // Замени 'showResults' на точное имя твоей функции, которая показывает топ на сайте
+    if (typeof showResults === 'function') {
+      showResults();
+    } else if (typeof displayResults === 'function') {
+      displayResults();
+    }
+  }
+});
+
 
 const startBtn = document.getElementById("start-btn");
 if (startBtn) startBtn.addEventListener("click", startSorting);
