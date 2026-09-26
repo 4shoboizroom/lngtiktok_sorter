@@ -476,6 +476,8 @@ if (importBtn) importBtn.addEventListener("click", () => {
     }
   }; // <--- ВОТ СЮДА переносим закрытие функции reader.onload
   reader.readAsText(file); // <--- теперь метод чтения стоит снаружи, как и должен
+  });
+}
 
 // Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
