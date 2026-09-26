@@ -91,6 +91,26 @@ textarea:focus {
   outline-offset: 1px;
 }
 
+.username-container {
+  margin: 15px 0;
+  width: 100%;
+}
+
+#username-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#username-input:focus {
+  border-color: #007bff; /* Или цвет вашей главной кнопки btn-primary */
+  outline: none;
+}
+
 .actions {
   display: flex;
   gap: 0.75rem;
