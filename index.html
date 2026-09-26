@@ -453,28 +453,26 @@ if (importBtn) importBtn.addEventListener("click", () => {
   if (fileInput) fileInput.click();
 });
 
-         reader.onload = (event) => {
-    const text = event.target.result;
-    items = parseItems(text);
+         // Сразу проверяем адресную строку при загрузке страницы
+  const urlParams = new URLSearchParams(window.location.search);
+  const resultData = urlParams.get('result');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const resultData = urlParams.get('result');
+  if (resultData) {
+    // Если зашли по ссылке топа (?result=24,25,26...)
+    const orderedIndices = resultData.split(',').map(Number);
+    finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
+    
+    const mainContainer = document.querySelector(".container");
+    if (mainContainer) mainContainer.style.display = "none";
+    
+    showResults();
+  } else {
+    // Если ссылки нет — сразу запускаем обычные баттлы с видео
+    startSorting();
+  }
+});
 
-    if (resultData) {
-      const orderedIndices = resultData.split(',').map(Number);
-      finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
-      
-      const mainContainer = document.querySelector(".container");
-      if (mainContainer) mainContainer.style.display = "none";
-      
-      showResults();
-    } else {
-      startSorting();
-    }
-  };
-  reader.readAsText(file);
-};
-
+// Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
