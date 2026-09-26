@@ -45,30 +45,32 @@
         </div>
       </section>
 
-      <!-- Results -->
-      <section id="results-screen" class="screen">
-        <div class="card">
-          <div class="sort-header">
-            <h2>Your rankings</h2>
-            <p class="progress-text">100% sorted</p>
-          </div>
-
-          <ol class="results-list" id="results-list"></ol>
-
-          <div class="actions">
-            <button type="button" class="btn-secondary" id="copy-btn">
-              Copy list
-            </button>
-            <button type="button" class="btn-secondary" id="save-btn">
-              Save to file
-            </button>
-            <button type="button" class="btn-primary" id="restart-btn">
-              Start over
-            </button>
-          </div>
-        </div>
-      </section>
+     <!-- Results -->
+<section id="results-screen" class="screen">
+  <div class="card">
+    <div class="sort-header">
+      <h2 id="results-title">Your rankings</h2> <!-- Добавили id для удобного поиска в JS -->
+      <p class="progress-text">100% sorted</p>
     </div>
+
+    <ol class="results-list" id="results-list"></ol>
+
+    <!-- Новое поле для ввода никнейма -->
+    <div class="username-container" id="username-container">
+      <input type="text" id="username-input" placeholder="Enter your name for the link..." maxlength="20">
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary" id="save-btn">
+        Share results
+      </button>
+      <button type="button" class="btn-primary" id="restart-btn">
+        Start over
+      </button>
+    </div>
+  </div>
+</section>
+       </div>
 
     <script src="sorter.js"></script>
     <script>
@@ -372,23 +374,22 @@ function startSorting() {
   return text;
 }
 
-  function copyResults() {
-  const text = finalRanking
-    .map((item, i) => `${i + 1}. ${item}`)
-    .join("\n");
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById("copy-btn");
-    const original = btn.textContent;
-    btn.textContent = "Copied!";
-    setTimeout(() => (btn.textContent = original), 2000);
-  });
-}
-
 function saveResults() {
-  // Собираем индексы из finalRanking. Так как там лежат индексы, переводим их в строку
-  const idsParam = finalRanking.map(item => encodeURIComponent(item)).join(',');
-  const shareUrl = `${window.location.origin}${window.location.pathname}?result=${idsParam}`;
+  // 1. Получаем имя из инпута и очищаем от лишних пробелов
+  const usernameInput = document.getElementById("username-input");
+  const username = usernameInput ? usernameInput.value.trim() : "";
   
+  // 2. Собираем индексы видео
+  const idsParam = finalRanking.map(item => encodeURIComponent(item)).join(',');
+  
+  // 3. Формируем красивую ссылку. Если имя введено, добавляем параметр user
+  let shareUrl = `${window.location.origin}${window.location.pathname}?`;
+  if (username) {
+    shareUrl += `user=${encodeURIComponent(username)}&`;
+  }
+  shareUrl += `result=${idsParam}`;
+  
+  // Копируем именную ссылку в буфер обмена
   navigator.clipboard.writeText(shareUrl).then(() => {
     const btn = document.getElementById("save-btn");
     const original = btn.textContent;
@@ -397,11 +398,8 @@ function saveResults() {
   });
 }
 
-// Делегирование кликов для динамических кнопок результатов
+// Делегирование кликов
 document.addEventListener("click", (event) => {
-  if (event.target && event.target.id === "copy-btn") {
-    copyResults();
-  }
   if (event.target && event.target.id === "save-btn") {
     saveResults();
   }
@@ -410,16 +408,28 @@ document.addEventListener("click", (event) => {
 // Проверяем адресную строку строго при загрузке страницы
 const urlParams = new URLSearchParams(window.location.search);
 const resultData = urlParams.get('result');
+const userData = urlParams.get('user'); // Получаем имя из ссылки
 
 if (resultData) {
   // Если зашли по ссылке топа (?result=24,25,26...)
   const orderedIndices = resultData.split(',').map(Number);
   
-  // Заполняем массив из правильного глобального массива tiktoks
   finalRanking = orderedIndices;
   
   // Сразу отрисовываем готовый топ на экране результатов
   showResults(finalRanking);
+  
+  // Меняем заголовок, если в ссылке передали имя
+  const resultsHeader = document.getElementById("results-title");
+  if (resultsHeader && userData) {
+    const decodedName = decodeURIComponent(userData); 
+    resultsHeader.textContent = `${decodedName}'s results`;
+  }
+  
+  // Полностью прячем блок ввода ника для тех, кто просто смотрит чужой результат
+  const usernameContainer = document.getElementById("username-container");
+  if (usernameContainer) usernameContainer.style.display = "none";
+
 } else {
   // Если ссылки нет — сразу запускаем обычные баттлы с видео
   startSorting();
