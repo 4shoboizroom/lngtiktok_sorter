@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bias Sorter</title>
+    <title>Сортер дурацких тиктоков LNGSHOT</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="app">
       <header>
-        <h1>Bias Sorter</h1>
-        <p>Rank your favorites with ease</p>
+        <h1>Сортер дурацких тиктоков LNGSHOT</h1>
+        <p>by тгк @areyoureadylngshot</p>
       </header>
 
       <!-- Input -->
@@ -146,7 +146,7 @@ return `
       
     </div>
 
-    <div class="desc" style="text-align: center; margin-top: 10px; font-size: 14px;">${item.desc}</div>
+<div class="desc" style="text-align: center; margin-top: 10px; font-size: 14px;">\${item.tiktokUrl ? `<a href="${item.tiktokUrl}" target="_blank" class="tiktok-link">${item.desc}</a>` : item.desc}</div>
   </div>
 `;
    }
@@ -315,53 +315,53 @@ function startSorting() {
   }
 }
 
-      const tiktoks = [
-  { id: "18N-Njj-LRWpk0yqyCcbCBUkks1ZBiimF", desc: "эмммммм я в восторге" },
-  { id: "181wQbNYFEUkEwPsgyHk2w8jeXXfT0l8h", desc: "без комментариев" },
-  { id: "1C6c5nOuWJawqZlM2V_h7IK6_Bh7krook", desc: "невероятно" },
-  { id: "16GF-bNaeSenC4x7fcnUcKxatol0L6rO0", desc: "....................." },
-  { id: "13kvGGBICS05SlzDL58aDo7F-MMbC7zXn", desc: "ноль попаданий" },
-  { id: "1vWPS8HTVTLnmTioFt0liFe_ATxTHtnUg", desc: "super idol de xiào róng" },
-  { id: "1VNQmtKJkw070g9Q57NpEVI-IB5MsgcKY", desc: "я не понимаю почему это всегда рюль" },
-  { id: "1lXcIg6RbDF7uZUTqa2UIFGRUYwRMoSSu", desc: "bro chill" },
-  { id: "12DvmBBBsqgI9AQvzD8dqgr6bEaDoAjj3", desc: "вот этот мой самый любимый в мире" },
-  { id: "10iGnqfoFhMFrdrBpwHERzw2ip9Pt5W66", desc: "то самое состязание" },
-  { id: "1qcnMe6Sh1k92PMtr0RaffreFKKyCVps4", desc: "и тут тоже рюль" },
-  { id: "1Z0YRTeXI19sqULMbXI1gl4IjBdUt8HrW", desc: "moya" },
-  { id: "1p1lSEM0FT-lrdc4s7FjFce3s-xT0lKEr", desc: "соник уджин" },
-  { id: "1oX8TwzqGicQVgN4BEo4akJjQSY7oYInr", desc: "вот эта хореография(??)" },
-  { id: "1ATjozfOCBcj8EPd3vg2WWX1FK_jkQXNU", desc: "сабвей серф лоншат версия" },
-  { id: "1tcNRwJgXbN76DJLtK2-fJrgVoa_auD1y", desc: "заметьте опять рюль." },
-  { id: "1jxk6OilfP4Loq6bwGWqvbDxlfUIKpTNt", desc: "вот это я просто тут оставлю" },
-  { id: "1EiC03eKgrQFWK3V7z2bA03iDQLem3Ssh", desc: "это один из сотни таких тт под no hi no hey" },
-  { id: "1b8b2Ux2tf_WYegpEU0r2IcCwZi7a4tEy", desc: "рюльву две дебильности" },
-  { id: "1-xlgjLGVmuktFRHl7RlI2efH0DxwF6CY", desc: ":((((( мне оч радостно когда я это смотрю" },
-  { id: "1qHCd9A5W1SmXnOugdznnV27uQqVw_ROP", desc: "вот это." },
-  { id: "1sm6MG_Mf5cB6DCMZd9qzs7KnL9YHLnwx", desc: "от этого тт мне тоже радостно" },
-  { id: "1fyReJ7xKRwUeoaYOVjTrNMbkbO3F0DR2", desc: "и это опять рюлььь" },
-  { id: "1Hc3ciwrDId_3siiiIbVraF7FPz2CBU1w", desc: "и вот этот луи тоже балбесный чуть-чуть" },
-  { id: "1Damib3pEnlgHAcpySQ-8JRTYPcmF4-Y2", desc: "без комментариев вы поняли что это опять он" },
-  { id: "1FnkbUut-8_7eVvnofJ5TMZekvPkFieh9", desc: "дурачье" },
-  { id: "10_5q4JPcmQA-lIMYNtQgYdSXlE3quJdY", desc: "....................бляяяя" },
-  { id: "1srkhjimQADVo6O9HE8UD7YqG7J_WfFjt", desc: "уджин у тебя что-то упало" },
-  { id: "1h3PRESRSC_WKHA-ricX6a_oJ9zKy3vrZ", desc: "вот тут рюль порвал штаны" },
-  { id: "1LJMclEctD3RPpMyeQJu_KeXklVdJFlp8", desc: "а вот тут балбесные подкаты" },
-  { id: "18aM879I3fISV9gBNoCcC1USp_OZHl7TR", desc: "incredible" },
-  { id: "19c0WWdTeAyWbvCMU1BlXXoQSY5uax1o-", desc: "..........." },
-  { id: "1gU-_RPb9By3qO6Pb0q77iEKu7KBjTdMB", desc: "если честно у меня больше нет слов" },
-  { id: "1LZvdZmAVRIoma2z1KPrbDn20Qu2THbjV", desc: "туюли....." },
-  { id: "1ilu0pugsMxeRUSI_-9i5Krc0R9whwyz1", desc: "протект уджин" },
-  { id: "1vSVeoP1CIK2bZlaCn9_qF-HvMj69ZYlh", desc: "дамб дамб дамб дамб дамб дамб" },
-  { id: "1-m2GOscUR9gxITNu86R2L7XQHRBd5lq3", desc: "я их не вывожу" },
-  { id: "10OfOjmKqHMnuSSs7oMRKp2z-ls8QfHsG", desc: "я хз как это подписывать" },
-  { id: "1HdyH00TIXVernAcSylDSUx0ZIeBMORnm", desc: "актерища фр" },
-  { id: "1N1S-e0GmN8iMF03hFu1mTBwQFBfB24FS", desc: "я обожаю" },
-  { id: "1gRM7SEwBgQGKeDsBzPQfMPGNmoR8DpyJ", desc: "школьники" },
-  { id: "1XRDRAKeeTuPb58R9Kb4rprPiYKdKSadc", desc: " ??????? забоялись" },
-  { id: "1vyFSOOVcLBkzVjHjshqVCmPafpg_Sq2D", desc: "утиное" },
-  { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "история повторяется" }
-];
-
+ const tiktoks = [
+  { id: "18N-Njj-LRWpk0yqyCcbCBUkks1ZBiimF", desc: "эмммммм я в восторге", tiktokUrl: "https://www.tiktok.com/t/ZTyhMcJKq/" },
+  { id: "181wQbNYFEUkEwPsgyHk2w8jeXXfT0l8h", desc: "без комментариев", tiktokUrl: "https://www.tiktok.com/t/ZTyhMtRaT/" },
+  { id: "1C6c5nOuWJawqZlM2V_h7IK6_Bh7krook", desc: "невероятно", tiktokUrl: "https://www.tiktok.com/t/ZTyhrkqRy/" },
+  { id: "16GF-bNaeSenC4x7fcnUcKxatol0L6rO0", desc: ".....................", tiktokUrl: "https://www.tiktok.com/t/ZTyhrSjUM/" },
+  { id: "13kvGGBICS05SlzDL58aDo7F-MMbC7zXn", desc: "ноль попаданий", tiktokUrl: "https://www.tiktok.com/t/ZTyhrjUeu/" },
+  { id: "1vWPS8HTVTLnmTioFt0liFe_ATxTHtnUg", desc: "super idol de xiào róng", tiktokUrl: "https://www.tiktok.com/t/ZTyhrL7E8/" },
+  { id: "1VNQmtKJkw070g9Q57NpEVI-IB5MsgcKY", desc: "я не понимаю почему это всегда рюль", tiktokUrl: "https://www.tiktok.com/t/ZTyhrYRm2/" },
+  { id: "1lXcIg6RbDF7uZUTqa2UIFGRUYwRMoSSu", desc: "bro chill", tiktokUrl: "https://tiktok.com" },
+  { id: "12DvmBBBsqgI9AQvzD8dqgr6bEaDoAjj3", desc: "вот этот мой самый любимый в мире", tiktokUrl: "https://www.tiktok.com/t/ZTyhrpguK/" },
+  { id: "10iGnqfoFhMFrdrBpwHERzw2ip9Pt5W66", desc: "то самое состязание", tiktokUrl: "https://www.tiktok.com/t/ZTyhrWUQf/" },
+  { id: "1qcnMe6Sh1k92PMtr0RaffreFKKyCVps4", desc: "и тут тоже рюль", tiktokUrl: "https://www.tiktok.com/t/ZTyhrWDUg/" },
+  { id: "1Z0YRTeXI19sqULMbXI1gl4IjBdUt8HrW", desc: "moya", tiktokUrl: "https://www.tiktok.com/t/ZTyhrQmNk/" },
+  { id: "1p1lSEM0FT-lrdc4s7FjFce3s-xT0lKEr", desc: "соник уджин", tiktokUrl: "https://www.tiktok.com/t/ZTyhrsstJ/" },
+  { id: "1oX8TwzqGicQVgN4BEo4akJjQSY7oYInr", desc: "вот эта хореография(??)", tiktokUrl: "https://www.tiktok.com/t/ZTyhrHKJV/" }
+  { id: "1ATjozfOCBcj8EPd3vg2WWX1FK_jkQXNU", desc: "сабвей серф лоншат версия", tiktokUrl: "https://www.tiktok.com/t/ZTyhhLePQ/" },
+  { id: "1tcNRwJgXbN76DJLtK2-fJrgVoa_auD1y", desc: "заметьте опять рюль.", tiktokUrl: "https://www.tiktok.com/t/ZTyhhYcXd/" },
+  { id: "1jxk6OilfP4Loq6bwGWqvbDxlfUIKpTNt", desc: "вот это я просто тут оставлю", tiktokUrl: "https://www.tiktok.com/t/ZTyhrEjFb/" },
+  { id: "1EiC03eKgrQFWK3V7z2bA03iDQLem3Ssh", desc: "это один из сотни таких тт под no hi no hey", tiktokUrl: "https://www.tiktok.com/t/ZTyhrTwNy/" },
+  { id: "1b8b2Ux2tf_WYegpEU0r2IcCwZi7a4tEy", desc: "рюльву две дебильности", tiktokUrl: "https://www.tiktok.com/t/ZTyhhM7Vp/" },
+  { id: "1-xlgjLGVmuktFRHl7RlI2efH0DxwF6CY", desc: ":((((( мне оч радостно когда я это смотрю", tiktokUrl: "https://www.tiktok.com/t/ZTyhr7goj/" },
+  { id: "1qHCd9A5W1SmXnOugdznnV27uQqVw_ROP", desc: "вот это.", tiktokUrl: "https://www.tiktok.com/t/ZTyhh22Au/" },
+  { id: "1sm6MG_Mf5cB6DCMZd9qzs7KnL9YHLnwx", desc: "от этого тт мне тоже радостно", tiktokUrl: "https://www.tiktok.com/t/ZTyhhQmaJ/" },
+  { id: "1fyReJ7xKRwUeoaYOVjTrNMbkbO3F0DR2", desc: "и это опять рюлььь", tiktokUrl: "https://www.tiktok.com/t/ZTyhhqxs8/" },
+  { id: "1Hc3ciwrDId_3siiiIbVraF7FPz2CBU1w", desc: "и вот этот луи тоже балбесный чуть-чуть", tiktokUrl: "https://www.tiktok.com/t/ZTyhhm8Rp/" },
+  { id: "1Damib3pEnlgHAcpySQ-8JRTYPcmF4-Y2", desc: "без комментариев вы поняли что это опять он", tiktokUrl: "https://www.tiktok.com/t/ZTyhhmGJL/" },
+  { id: "1FnkbUut-8_7eVvnofJ5TMZekvPkFieh9", desc: "дурачье", tiktokUrl: "https://www.tiktok.com/t/ZTyhhCLFg/" }
+  { id: "10_5q4JPcmQA-lIMYNtQgYdSXlE3quJdY", desc: "....................бляяяя", tiktokUrl: "https://www.tiktok.com/t/ZTyhhAJCS/" },
+  { id: "1srkhjimQADVo6O9HE8UD7YqG7J_WfFjt", desc: "уджин у тебя что-то упало", tiktokUrl: "https://www.tiktok.com/t/ZTyhhkQR5/" },
+  { id: "1h3PRESRSC_WKHA-ricX6a_oJ9zKy3vrZ", desc: "вот тут рюль порвал штаны", tiktokUrl: "https://www.tiktok.com/t/ZTyhhUeRP/" },
+  { id: "1LJMclEctD3RPpMyeQJu_KeXklVdJFlp8", desc: "а вот тут балбесные подкаты", tiktokUrl: "https://www.tiktok.com/t/ZTyhhgWhG/" },
+  { id: "18aM879I3fISV9gBNoCcC1USp_OZHl7TR", desc: "incredible", tiktokUrl: "https://www.tiktok.com/t/ZTyhh3GxF/" },
+  { id: "19c0WWdTeAyWbvCMU1BlXXoQSY5uax1o-", desc: "...........", tiktokUrl: "https://www.tiktok.com/t/ZTyhkNFLL/" },
+  { id: "1gU-_RPb9By3qO6Pb0q77iEKu7KBjTdMB", desc: "если честно у меня больше нет слов", tiktokUrl: "https://www.tiktok.com/t/ZTyhhoShs/" },
+  { id: "1LZvdZmAVRIoma2z1KPrbDn20Qu2THbjV", desc: "туюли.....", tiktokUrl: "https://www.tiktok.com/t/ZTyhhEkQm/" },
+  { id: "1ilu0pugsMxeRUSI_-9i5Krc0R9whwyz1", desc: "протект уджин", tiktokUrl: "https://www.tiktok.com/t/ZTyhhoMPH/" },
+  { id: "1vSVeoP1CIK2bZlaCn9_qF-HvMj69ZYlh", desc: "дамб дамб дамб дамб дамб дамб", tiktokUrl: "https://www.tiktok.com/t/ZTyhhK7DX/" },
+  { id: "1-m2GOscUR9gxITNu86R2L7XQHRBd5lq3", desc: "я их не вывожу", tiktokUrl: "https://www.tiktok.com/t/ZTyhhnxdd/" },
+  { id: "10OfOjmKqHMnuSSs7oMRKp2z-ls8QfHsG", desc: "я хз как это подписывать", tiktokUrl: "https://www.tiktok.com/t/ZTyhkNxg5/" },
+  { id: "1HdyH00TIXVernAcSylDSUx0ZIeBMORnm", desc: "актерища фр", tiktokUrl: "https://www.tiktok.com/t/ZTyhhET1k/" },
+  { id: "1N1S-e0GmN8iMF03hFu1mTBwQFBfB24FS", desc: "я обожаю", tiktokUrl: "https://www.tiktok.com/t/ZTyhhKXRd/" },
+  { id: "1gRM7SEwBgQGKeDsBzPQfMPGNmoR8DpyJ", desc: "школьники", tiktokUrl: "https://www.tiktok.com/t/ZTyhhoaq2/" },
+  { id: "1XRDRAKeeTuPb58R9Kb4rprPiYKdKSadc", desc: " ??????? забоялись", tiktokUrl: "https://www.tiktok.com/t/ZTyhkMYtc/" },
+  { id: "1vyFSOOVcLBkzVjHjshqVCmPafpg_Sq2D", desc: "утиное", tiktokUrl: "https://www.tiktok.com/t/ZTyhku2vy/" },
+  { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "история повторяется", tiktokUrl: "https://www.tiktok.com/t/ZTyhkkQ49/" }
+]
+      
       function showResults(ranking) {
          resultsList.innerHTML = ranking
     .map(
@@ -430,6 +430,10 @@ document.addEventListener("click", (event) => {
   if (event.target && event.target.id === "save-btn") {
     saveResults();
   }
+  // чиним кнопку сброса/перезапуска
+  if (event.target && event.target.id === "restart-btn") {
+    window.location.href = window.location.origin + window.location.pathname;
+  }
 });
 
 // Проверяем адресную строку строго при загрузке страницы
@@ -439,16 +443,7 @@ const resultData = urlParams.get('r') || urlParams.get('result');
 const userData = urlParams.get('user');
 
 if (resultData) {
-  let orderedIndices = [];
-  
-  if (resultData.includes(',')) {
-    // Старый формат (через запятую)
-    orderedIndices = resultData.split(',').map(Number);
-  } else {
-    // Новый сжатый формат
-    orderedIndices = unpackResults(resultData);
-  }
-  
+  const orderedIndices = resultData.includes(',') ? resultData.split(',').map(Number) : unpackResults(resultData);
   if (orderedIndices && orderedIndices.length > 0) {
     finalRanking = orderedIndices;
     showResults(finalRanking);
@@ -459,15 +454,45 @@ if (resultData) {
     }
     
     const usernameContainer = document.getElementById("username-container");
-    if (usernameContainer) usernameContainer.style.display = "none";
+    const restartBtn = document.getElementById("restart-btn");
+    
+    // если зашли по чужой именной ссылке — меняем текст кнопки на «try it yourself»
+    if (usernameContainer && (usernameContainer.style.display === "none" || !userData)) {
+      if (restartBtn) {
+        restartBtn.textContent = "try it yourself";
+      }
+    }
   } else {
     startSorting();
   }
 } else {
+  // если параметров в ссылке нет — запускаем обычную игру
+  startSorting();
+}
+    
+    const usernameContainer = document.getElementById("username-container");
+    const restartBtn = document.getElementById("restart-btn");
+    
+    if (usernameContainer) {
+      // если мы зашли по ссылке результатов И контейнер инпута скрыт — значит, это чужой результат!
+      if (usernameContainer.style.display === "none" || !userData) {
+        if (restartBtn) {
+          restartBtn.textContent = "try it yourself";
+          // при клике на «try it yourself» просто перекидываем на чистый сортер без параметров в URL
+          restartBtn.onclick = () => {
+            window.location.href = window.location.origin + window.location.pathname;
+          };
+        }
+      }
+    }
+  } else {
+    startSorting();
+  }
+} else {
+  // если параметров в ссылке нет — это обычная игра, запускаем баттлы
   startSorting();
 }
 
-// Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
