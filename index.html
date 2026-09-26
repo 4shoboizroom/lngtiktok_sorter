@@ -453,15 +453,13 @@ if (importBtn) importBtn.addEventListener("click", () => {
   if (fileInput) fileInput.click();
 });
 
-const fileInput = document.getElementById("file-input");
-if (fileInput) fileInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const text = event.target.result;
-    const items = parseItems(text);
-    startSorting();
+if (window.pendingResultIndices) {
+  finalRanking = window.pendingResultIndices.map(index => items[index]).filter(Boolean);
+  const mainContainer = document.querySelector(".container");
+  if (mainContainer) mainContainer.style.display = "none";
+  showResults();
+} else {
+  startSorting();
   };
   reader.readAsText(file);
 });
@@ -471,7 +469,33 @@ document.getElementById("btn-right").addEventListener("click", () => handleChoic
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
 document.getElementById("btn-undo").addEventListener("click", () => handleChoice("undo"));
 
-startSorting();
+// Автоматически проверяем ссылку при открытии сайта
+const urlParams = new URLSearchParams(window.location.search);
+const resultData = urlParams.get('result');
+
+if (resultData) {
+  // Если кто-то зашел по ссылке топа (?result=24,25,26...)
+  const orderedIndices = resultData.split(',').map(Number);
+  
+  // Передаем эти индексы в твой массив результатов
+  finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
+  
+  // Прячем игровое поле баттлов, чтобы не запускалась Battle #1
+  const mainContainer = document.querySelector(".container");
+  if (mainContainer) mainContainer.style.display = "none";
+  
+  // Вызываем твою стандартную функцию, которая сразу выводит топ на экран
+  // Замени 'showResults' на точное название твоей функции отрисовки топа
+  if (typeof showResults === 'function') {
+    showResults();
+  } else if (typeof displayResults === 'function') {
+    displayResults();
+  }
+} else {
+  // Если параметров в ссылке нет — запускаем обычную сортировку с нуля
+  startSorting();
+}
+
 </script>
 </body>
 </html>
