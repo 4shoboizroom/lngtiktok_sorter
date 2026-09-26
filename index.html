@@ -453,43 +453,36 @@ if (importBtn) importBtn.addEventListener("click", () => {
   if (fileInput) fileInput.click();
 });
 
-    if (window.pendingResultIndices) {
-      finalRanking = window.pendingResultIndices.map(index => items[index]).filter(Boolean);
+        reader.onload = (event) => {
+    const text = event.target.result;
+    items = parseItems(text); // Наш массив видео заполнился данными!
+
+    // Сразу проверяем, не зашли ли мы по ссылке с готовым результатом
+    const urlParams = new URLSearchParams(window.location.search);
+    const resultData = urlParams.get('result');
+
+    if (resultData) {
+      // Если ссылка с цифрами есть, парсим их и выводим топ
+      const orderedIndices = resultData.split(',').map(Number);
+      finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
+      
       const mainContainer = document.querySelector(".container");
       if (mainContainer) mainContainer.style.display = "none";
+      
       showResults();
     } else {
+      // Если ссылки нет — запускаем обычные баттлы с видео
       startSorting();
     }
+  };
+  reader.readAsText(file);
+});
 
+// Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
 document.getElementById("btn-undo").addEventListener("click", () => handleChoice("undo"));
-
-// автоматически проверяем ссылку при открытии сайта
-const urlParams = new URLSearchParams(window.location.search);
-const resultData = urlParams.get('result');
-
-if (resultData) {
-  const orderedIndices = resultData.split(',').map(Number);
-  
-  // если массив items уже существует и в нем есть видео
-  if (typeof items !== 'undefined' && items.length > 0) {
-    const mainContainer = document.querySelector(".container");
-    if (mainContainer) mainContainer.style.display = "none";
-    
-    finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
-    showResults();
-  } else {
-    // если файл еще не загружен — сохраняем индексы в память
-    window.pendingResultIndices = orderedIndices;
-  }
-} else {
-  // если зашли без ссылки — просто запускаем сортер
-  startSorting();
-}
-
 </script>
 </body>
 </html>
