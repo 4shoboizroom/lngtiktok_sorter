@@ -480,18 +480,21 @@ if (resultData) {
     const restartBtn = document.getElementById("restart-btn");
     
     if (usernameContainer) {
-      // если мы зашли по ссылке результатов И контейнер инпута скрыт — значит, это чужой результат!
-          if (userData) {
-      if (restartBtn) restartBtn.textContent = "Try it yourself";
-    } else {
-      if (restartBtn) restartBtn.textContent = "Start over";
-    }
-    }
+  if (userData) {
+    // Чужой результат по ссылке с именем
+    if (restartBtn) restartBtn.textContent = "try it yourself";
+    usernameContainer.style.display = "none"; // Прячем инпут только для гостей
+  } else {
+    // Твой собственный свежий результат
+    if (restartBtn) restartBtn.textContent = "start over";
+    usernameContainer.style.display = "block"; // Показываем инпут, чтобы ты могла ввести ник
+  }
+} 
 else {
   // если параметров в ссылке нет — это обычная игра, запускаем баттлы
   startSorting();
 }
-
+  
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
