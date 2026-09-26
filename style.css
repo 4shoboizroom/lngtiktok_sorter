@@ -1,15 +1,18 @@
 :root {
-  /* Новая пастельно-розовый журнальный минимализм строго по референсу */
-  --background: #fdfaf9;   /* Эстетичный молочно-белый фон с едва заметным розовым отливом */
-  --card: #f5eae6;         /* Приглушенный нежно-пудровый фон главной карточки */
-  --card-darker: #e8dad4;  /* Глубокий пыльно-розовый оттенок для кнопок и плашек видео */
-  --primary: #948079;      /* Матовый благородный серо-коричневый для кнопок действий (CTA) */
-  --primary-dark: #7d6b64; /* Темный кофейный оттенок для наведения */
-  --text-dark: #3d3532;     /* Глубокий матовый цвет для текста */
-  --text-light: #8f807a;    /* Мягкий пастельный тон для второстепенных надписей */
-  --border: #ebdcd6;        /* Эстетичная тонкая рамка в цвет интерфейса */
-  --success: #a4b29c;       /* Приглушенный шалфейно-зеленый (для Equal при наведении) */
-  --secondary: #d1bebe;     /* Более насыщенный пастельно-розовый (для Undo при наведении) */
+  /* Идеальная палитра строго по пикселям твоего референса */
+  --background: #f7f3ee;   /* Светлая кремовая база (фон боковых полей макета) */
+  --card: #ebdcd6;         /* Нежная пудрово-розовая основа (как блок H2 в центре) */
+  --card-darker: #dfcfc7;  /* Пыльно-розовый поглубже для карточек видео и кнопок */
+  --primary: #928476;      /* Матовый серо-коричневый для главных кнопок (как плашки CTA) */
+  --primary-dark: #7b6f63; /* Более темный тон для наведения */
+  
+  --text-dark: #2b2725;     /* Глубокий кофейно-графитовый для заголовков и текста */
+  --text-light: #7e736a;    /* Приглушенный тон для прогресса и подсказок */
+  --border: #dfcfc7;        /* Тонкая рамка, плавно сливающаяся с элементами */
+  
+  /* Пастельные помощники для наведения на кнопки внутри игры */
+  --success: #ccd5c6;       /* Мягкий шалфейный зеленый для Equal */
+  --secondary: #e2d2cc;     /* Нежный пудрово-розовый для Undo */
 }
 
 *,
@@ -21,7 +24,6 @@
 body {
   margin: 0;
   min-height: 100vh;
-  /* Используем чистые системные шрифты, которые выглядят аккуратно и дорого */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--background);
   color: var(--text-dark);
@@ -31,25 +33,28 @@ body {
 .app {
   max-width: 720px;
   margin: 0 auto;
-  padding: 2.5rem 1.25rem 4rem;
+  padding: 2.5rem 1.25rem 3rem;
 }
 
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 header h1 {
   margin: 0;
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   font-weight: 700;
-  color: var(--text-dark); /* Заголовок сайта делаем строгим темным */
+  letter-spacing: 0.05em;
+  text-transform: uppercase; /* Строгий заголовок капсом по референсу */
+  color: var(--text-dark);
 }
 
 header p {
   margin: 0.45rem 0 0;
   color: var(--text-light);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
 }
 
 .screen {
@@ -60,24 +65,27 @@ header p {
   display: block;
 }
 
-/* 1. Делаем главную карточку объемной за счет очень мягкой, дорогой тени */
+/* Строгая матовая бежево-розовая панель */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.75rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  border-radius: 4px; /* Четкие прямоугольные формы по макету */
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(43, 39, 37, 0.02);
 }
 
 .card h2 {
-  margin: 0 0 0.35rem;
-  font-size: 1.15rem;
-  font-weight: 600;
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-dark);
 }
 
 .hint {
-  margin: 0 0 1.25rem;
-  font-size: 0.875rem;
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
   color: var(--text-light);
 }
 
@@ -88,8 +96,9 @@ textarea {
   font: inherit;
   font-size: 0.95rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #f8fafc;
+  border-radius: 4px;
+  background: var(--background);
+  color: var(--text-dark);
   resize: vertical;
   transition: all 0.15s ease-in-out;
 }
@@ -98,46 +107,46 @@ textarea:focus {
   outline: none;
   background: #ffffff;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px rgba(146, 132, 118, 0.12);
 }
 
 .username-container {
-  margin: 24px 0;
+  margin: 20px 0;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-/* 2. Чистим инпут для имени: убираем неон, делаем его в тон кнопкам */
+/* Инпут для имени в общей точной пастельной гамме */
 #username-input {
   width: 100%;
   max-width: 320px;
   padding: 12px 16px;
-  font-size: 15px;
+  font-size: 14px;
   font-family: inherit;
   color: var(--text-dark);
-  background-color: #f8fafc;
+  background-color: var(--background);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 4px;
   box-sizing: border-box;
   text-align: center;
   transition: all 0.15s ease-in-out;
 }
 
 #username-input:hover {
-  border-color: #cbd5e1;
+  border-color: var(--primary);
 }
 
 #username-input:focus {
   background-color: #ffffff;
   border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); /* Легкое матовое выделение */
+  box-shadow: 0 0 0 3px rgba(146, 132, 118, 0.12);
 }
 
 #username-input::placeholder {
-  color: #94a3b8;
-  font-weight: 400;
+  color: var(--text-light);
+  opacity: 0.7;
 }
 
 .actions {
@@ -147,25 +156,27 @@ textarea:focus {
   flex-wrap: wrap;
 }
 
+/* Кнопки-плашки как прямоугольные темные акценты */
 button {
   font: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0.75rem 1.25rem;
   cursor: pointer;
-  transition: all 0.15s ease-in-out; /* Делаем все изменения цвета плавными */
+  transition: all 0.15s ease-in-out;
 }
 
-/* Эффект физического нажатия для абсолютно всех кнопок на сайте */
 button:active {
-  transform: scale(0.97) !important;
+  transform: scale(0.98);
 }
 
 .btn-primary {
   background: var(--primary);
-  color: white;
+  color: var(--background);
   flex: 1;
 }
 
@@ -174,37 +185,38 @@ button:active {
 }
 
 .btn-secondary {
-  background: var(--card);
+  background: var(--card-darker);
   color: var(--text-dark);
   border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: var(--primary);
+  color: var(--background);
+  border-color: var(--primary);
 }
 
 .sort-header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .sort-header h2 {
   margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.2rem;
 }
 
 .sort-header .progress-text {
-  margin: 0.35rem 0 0.85rem;
+  margin: 0.35rem 0 0.75rem;
   color: var(--text-light);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
+/* Тонкая прямоугольная полоса прогресса */
 .progress-bar {
-  height: 8px; /* Чуть тоньше и аккуратнее */
-  background: var(--border);
-  border-radius: 999px;
+  height: 6px;
+  background: var(--card-darker);
+  border-radius: 2px;
   overflow: hidden;
 }
 
@@ -212,7 +224,7 @@ button:active {
   height: 100%;
   width: 0%;
   background: var(--primary);
-  border-radius: 999px;
+  border-radius: 2px;
   transition: width 0.25s ease;
 }
 
@@ -224,32 +236,24 @@ button:active {
   margin-top: 1.5rem;
 }
 
-/* 3. Оформляем видео-карточки во время игры */
+/* Карточки видео в виде аккуратных пыльно-розовых блоков */
 .choice-btn {
   min-height: 140px;
-  padding: 0.5rem; /* Немного уменьшили внутренний отступ для центровки */
-  background: var(--card);
+  padding: 0.5rem;
+  background: var(--card-darker);
   color: var(--text-dark);
-  border: 1px solid var(--border); /* Делаем рамку тоньше */
-  border-radius: 12px;
-  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.95rem;
   line-height: 1.4;
   word-break: break-word;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
-/* Плавный подъем карточки при наведении */
 .choice-btn:hover {
   border-color: var(--primary);
-  background: #ffffff;
+  background: var(--card);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.05);
-}
-
-.choice-btn.right:hover {
-  border-color: var(--secondary);
-  box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.05);
 }
 
 .middle-actions {
@@ -259,42 +263,40 @@ button:active {
   gap: 0.65rem;
 }
 
-/* 4. Шлифуем серые кнопки Equal и Undo */
+/* Кнопки Equal и Undo в общей стилистике */
 .middle-actions button {
   min-width: 110px;
   padding: 0.65rem 1rem;
-  background: var(--card);
+  background: var(--card-darker);
   color: var(--text-dark);
   border: 1px solid var(--border);
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 8px;
+  font-size: 0.85rem;
 }
 
 .middle-actions button:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: var(--card);
+  border-color: var(--primary);
 }
 
 .middle-actions .btn-equal:hover {
   border-color: var(--success);
-  color: var(--success);
-  background: #f0fdf4; /* Очень нежный матовый зеленый оттенок */
+  color: var(--text-dark);
+  background: var(--success); /* Шалфейный зеленый */
 }
 
 .middle-actions .btn-undo:hover {
   border-color: var(--secondary);
-  color: var(--secondary);
-  background: #fff1f2; /* Очень нежный матовый розовый оттенок */
+  color: var(--text-dark);
+  background: var(--secondary); /* Размытый пудрово-розовый */
 }
 
 .middle-actions .btn-undo:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-  transform: none !important;
+  transform: none;
 }
 
-/* 5. Делаем красивый список результатов */
+/* Список результатов в журнальной эстетике */
 .results-list {
   list-style: none;
   margin: 0;
@@ -304,9 +306,9 @@ button:active {
 }
 
 .results-list li {
-  padding: 0.75rem 0.5rem;
+  padding: 0.85rem 0.5rem;
   border-bottom: 1px solid var(--border);
-  font-size: 0.975rem;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
 }
@@ -317,36 +319,36 @@ button:active {
 
 .results-list .rank {
   display: inline-block;
-  min-width: 2.25rem;
+  min-width: 2.5rem;
   font-weight: 700;
   color: var(--primary);
 }
 
-/* Оформление для наших кликабельных ссылок-подписей */
+/* Подписи-ссылки с аккуратным матовым подчеркиванием */
 .tiktok-link {
   color: var(--text-dark);
   text-decoration: none;
   transition: all 0.15s ease;
   font-weight: 500;
+  border-bottom: 1px dashed transparent;
 }
 
 .tiktok-link:hover {
-  color: var(--primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary-dark);
 }
 
 .error {
   margin-top: 0.75rem;
-  color: #ef4444;
-  font-size: 0.875rem;
+  color: #a94442;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 560px) {
   .comparison {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .middle-actions {
