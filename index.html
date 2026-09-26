@@ -385,23 +385,19 @@ function startSorting() {
 }
 
 function saveResults() {
-  // Собираем индексы из твоего списка результатов в строку через запятую
-  const idsParam = finalRanking.map(item => {
-    // Если в finalRanking лежат объекты, вытаскиваем их индекс из исходного массива (например, items)
-    // Если там уже лежат просто индексы/строки, оставляем как есть
-    const index = typeof item === 'object' ? items.indexOf(item) : item;
-    return encodeURIComponent(index);
-  }).join(',');
-  
-  // Генерируем ссылку на твой сайт с результатом
+  // Собираем индексы из finalRanking. Так как там лежат индексы, переводим их в строку
+  const idsParam = finalRanking.map(item => encodeURIComponent(item)).join(',');
   const shareUrl = `${window.location.origin}${window.location.pathname}?result=${idsParam}`;
   
-  // Копируем ссылку в буфер обмена
   navigator.clipboard.writeText(shareUrl).then(() => {
     const btn = document.getElementById("save-btn");
     const original = btn.textContent;
     btn.textContent = "Link Copied!";
-   // Ловим клики по кнопкам результатов, как только они рендерятся на странице
+    setTimeout(() => { btn.textContent = original; }, 2000);
+  });
+}
+
+// Делегирование кликов для динамических кнопок результатов
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id === "copy-btn") {
     copyResults();
@@ -411,66 +407,23 @@ document.addEventListener("click", (event) => {
   }
 });
 
-  if (event.target && event.target.id === "save-btn") {
-    saveResults();
-  }
-});
+// Проверяем адресную строку строго при загрузке страницы
+const urlParams = new URLSearchParams(window.location.search);
+const resultData = urlParams.get('result');
 
-  // Проверяем ссылку при открытии сайта
-window.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const resultData = urlParams.get('result');
+if (resultData) {
+  // Если зашли по ссылке топа (?result=24,25,26...)
+  const orderedIndices = resultData.split(',').map(Number);
   
-  // Если кто-то зашел по ссылке топа (?result=24,25,26...)
-  if (resultData) {
-    const orderedIndices = resultData.split(',').map(Number);
-    
-    // 1. Прячем стартовый экран (замени 'start-screen' на реальный ID своего стартового блока)
-    const startScreen = document.getElementById("start-screen");
-    if (startScreen) startScreen.style.display = "none";
-    
-    // 2. Очищаем массив результатов и наполняем его согласно ссылке
-    // Замени 'items' на имя твоего исходного массива с 44 видео, если оно отличается
-    finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
-    
-    // 3. Вызываем твою стандартную функцию, которая отрисовывает финальный экран результатов
-    // Замени 'showResults' на точное имя твоей функции, которая показывает топ на сайте
-    if (typeof showResults === 'function') {
-      showResults();
-    } else if (typeof displayResults === 'function') {
-      displayResults();
-    }
-  }
-});
-
-
-const startBtn = document.getElementById("start-btn");
-if (startBtn) startBtn.addEventListener("click", startSorting);
-
-const importBtn = document.getElementById("import-btn");
-if (importBtn) importBtn.addEventListener("click", () => {
-  const fileInput = document.getElementById("file-input");
-  if (fileInput) fileInput.click();
-});
-
-         // Сразу проверяем адресную строку при загрузке страницы
-  const urlParams = new URLSearchParams(window.location.search);
-  const resultData = urlParams.get('result');
-
-  if (resultData) {
-    // Если зашли по ссылке топа (?result=24,25,26...)
-    const orderedIndices = resultData.split(',').map(Number);
-    finalRanking = orderedIndices.map(index => items[index]).filter(Boolean);
-    
-    const mainContainer = document.querySelector(".container");
-    if (mainContainer) mainContainer.style.display = "none";
-    
-    showResults();
-  } else {
-    // Если ссылки нет — сразу запускаем обычные баттлы с видео
-    startSorting();
-  }
-});
+  // Заполняем массив из правильного глобального массива tiktoks
+  finalRanking = orderedIndices;
+  
+  // Сразу отрисовываем готовый топ на экране результатов
+  showResults(finalRanking);
+} else {
+  // Если ссылки нет — сразу запускаем обычные баттлы с видео
+  startSorting();
+}
 
 // Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
