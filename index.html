@@ -470,12 +470,12 @@ if (importBtn) importBtn.addEventListener("click", () => {
       if (mainContainer) mainContainer.style.display = "none";
       
       showResults();
-    } else {
+        } else {
       // Если ссылки нет — запускаем обычные баттлы с видео
       startSorting();
     }
-  reader.readAsText(file);
-};
+  }; // <--- ВОТ СЮДА переносим закрытие функции reader.onload
+  reader.readAsText(file); // <--- теперь метод чтения стоит снаружи, как и должен
 
 // Навешиваем клики на кнопки выбора баттлов
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
