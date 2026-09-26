@@ -121,20 +121,20 @@ function getTikTokHTML(index) {
 return `
   <div class="video-card-wrapper" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
     
-    <!-- Вертикальная маска сайта 9:16 -->
+    <!-- вертикальный контейнер-маска сайта 9:16 -->
     <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
       
-      <!-- Сделали плеер уже (width: 100%) и добавили transform: scale(1.0, 1.4), чтобы вытянуть его по вертикали и убрать лишнее -->
+      <!-- делаем iframe широким (315%), чтобы спрятать боковые поля диска, и центрируем саму кнопку play -->
       <iframe 
         src="${embedUrl}" 
         allow="autoplay" 
         style="
           position: absolute;
-          top: 50%;
+          top: 0;
           left: 50%;
-          width: 100%;
+          width: 315%;
           height: 100%;
-          transform: translate(-50%, -50%) scale(1.0, 1.4);
+          transform: translateX(-50%);
           border: none;
         ">
       </iframe>
