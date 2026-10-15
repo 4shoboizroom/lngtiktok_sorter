@@ -1,363 +1,84 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Сортер дурацких тиктоков LNGSHOT</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="app">
-      <header>
-        <h1>Сортер дурацких тиктоков LNGSHOT</h1>
-        <p>by тгк @areyoureadylngshot</p>
-      </header>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сортер дурацких тиктоков LNGSHOT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Сортер дурацких тиктоков LNGSHOT</h1>
+      <p>by тгк @areyoureadylngshot</p>
+    </header>
 
-      <!-- Input -->
-
-      <!-- Sorting -->
-      <section id="sort-screen" class="screen active">
-        <div class="card">
-          <div class="sort-header">
-            <h2 id="battle-label">Battle #1</h2>
-            <p class="progress-text" id="progress-text">0% sorted</p>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-fill"></div>
-            </div>
-          </div>
-
-          <p class="hint" style="text-align: center; margin-bottom: 0">
-            Which do you prefer?
-          </p>
-
-          <div class="comparison">
-            <button type="button" class="choice-btn left" id="btn-left"></button>
-
-            <div class="middle-actions">
-              <button type="button" class="btn-equal" id="btn-equal">Equal</button>
-              <button type="button" class="btn-undo" id="btn-undo" disabled>
-                Undo
-              </button>
-            </div>
-
-            <button type="button" class="choice-btn right" id="btn-right"></button>
+    <section id="sort-screen" class="screen active">
+      <div class="card">
+        <div class="sort-header">
+          <h2 id="battle-label">Battle #1</h2>
+          <p class="progress-text" id="progress-text">0% sorted</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
           </div>
         </div>
-      </section>
 
-     <!-- Results -->
-<section id="results-screen" class="screen">
-  <div class="card">
-    <div class="sort-header">
-      <h2 id="results-title">Your rankings</h2>
-      <p class="progress-text">100% sorted</p>
-    </div>
+        <p class="hint" style="text-align:center;margin-bottom:0">
+          Which do you prefer?
+        </p>
 
-    <ol class="results-list" id="results-list"></ol>
+        <div class="comparison">
+          <button type="button" class="choice-btn left" id="btn-left"></button>
 
-    <!-- ИНПУТ С ЖЕСТКО ПРОПИСАННЫМИ СТИЛЯМИ ДЛЯ ТЕМАТИКИ -->
-    <div id="username-container" style="margin: 20px 0; width: 100; display: flex; justify-content: center;">
-      <input type="text" id="username-input" placeholder="Enter your name for the link..." maxlength="20" 
-             style="width: 100%; max-width: 320px; padding: 12px 16px; font-size: 15px; font-family: inherit; color: #1f2937; background-color: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; box-sizing: border-box; text-align: center; transition: all 0.2s ease-in-out;"
-             onfocus="this.style.backgroundColor='#ffffff'; this.style.borderColor='#6366f1'; this.style.boxShadow='0 0 0 4px rgba(99, 102, 241, 0.15)'; this.style.outline='none';"
-             onblur="this.style.backgroundColor='#f9fafb'; this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
-    </div>
+          <div class="middle-actions">
+            <button type="button" class="btn-equal" id="btn-equal">Equal</button>
+            <button type="button" class="btn-undo" id="btn-undo" disabled>Undo</button>
+          </div>
 
-    <div class="actions">
-      <button type="button" class="btn-secondary" id="save-btn">
-        Share results
-      </button>
-      <button type="button" class="btn-primary" id="restart-btn">
-        Start over
-      </button>
-    </div>
-  </div>
-</section>
-       </div>
-
-    <script src="sorter.js"></script>
-    <script>
-      let logic = null;
-      let battleCount = 0;
-      let finalRanking = [];
-
-      const screens = {
-        input: document.getElementById("input-screen"),
-        sort: document.getElementById("sort-screen"),
-        results: document.getElementById("results-screen"),
-      };
-
-      const itemsInput = document.getElementById("items-input");
-      const inputError = document.getElementById("input-error");
-      const battleLabel = document.getElementById("battle-label");
-      const progressText = document.getElementById("progress-text");
-      const progressFill = document.getElementById("progress-fill");
-      const btnLeft = document.getElementById("btn-left");
-      const btnRight = document.getElementById("btn-right");
-      const btnEqual = document.getElementById("btn-equal");
-      const btnUndo = document.getElementById("btn-undo");
-      const resultsList = document.getElementById("results-list");
-
-     function showScreen(screenId) {
-  const screens = ["input", "sort", "results"];
-  screens.forEach((id) => {
-    const screen = document.getElementById(`${id}-screen`);
-    if (screen) {
-      if (id === screenId) {
-        screen.classList.add("active");
-        screen.style.display = "block";
-      } else {
-        screen.classList.remove("active");
-        screen.style.display = "none";
-      }
-    }
-  });
-}
-
-function parseItems(text) {
-  return tiktoks.map((_, index) => index);
-}
-
-function getTikTokHTML(index) {
-  const item = tiktoks[index];
-  if (!item) return "";
-  
-  const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
-  
-  // Добавили onclick="event.stopPropagation();", чтобы при клике на текст открывался Тикток, 
-  // но сам баттл при этом не переключался дальше на следующее видео!
-  const descHTML = item.tiktokUrl 
-    ? `<a href="${item.tiktokUrl}" target="_blank" class="tiktok-link" onclick="event.stopPropagation();">${item.desc}</a>` 
-    : item.desc;
-
-  return `
-    <div class="video-card-wrapper" data-id="${item.id}" style="width: 100%; max-width: 280px; margin: 0 auto; display: block; overflow: hidden; border-radius: 8px;">
-      
-      <!-- Контейнер-маска (9:16) -->
-      <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
-        
-        <!-- Твой идеальный вариант с масштабированием, чтобы убрать полосы Гугла -->
-        <iframe 
-          src="${embedUrl}" 
-          allow="autoplay" 
-          loading="lazy"
-          style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 420%;
-            height: 300%;
-            transform: translate(-50%, -50%) scale(0.238, 0.333);
-            border: none;
-          ">
-        </iframe>
-        
+          <button type="button" class="choice-btn right" id="btn-right"></button>
+        </div>
       </div>
+    </section>
 
-      <!-- Вставляем уже готовую переменную descHTML без лишних вложенных шаблонов -->
-      <div class="desc" style="text-align: center; margin-top: 10px; font-size: 14px;">${descHTML}</div>
-    </div>
-  `;
-}
+    <section id="results-screen" class="screen">
+      <div class="card">
+        <div class="sort-header">
+          <h2 id="results-title">Your rankings</h2>
+          <p class="progress-text">100% sorted</p>
+        </div>
 
-function cleanupVideosMemory() {
-  const containers = [btnLeft, btnRight];
-  containers.forEach(container => {
-    if (container) {
-      const iframes = container.querySelectorAll("iframe");
-      iframes.forEach(iframe => {
-        try {
-          iframe.src = "about:blank"; 
-          iframe.remove(); 
-        } catch (e) {
-          console.log("Ошибка очистки iframe:", e);
-        }
-      });
-    }
-  });
-}
+        <ol class="results-list" id="results-list"></ol>
 
-      function showError(message) {
-  const inputError = document.getElementById("input-error");
-  if (inputError) {
-    inputError.textContent = message;
-    inputError.hidden = !message;
-  }
-}
+        <div id="username-container"
+             style="margin:20px 0;width:100%;display:flex;justify-content:center">
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Enter your name for the link..."
+            maxlength="20"
+            style="width:100%;max-width:320px;padding:12px 16px;font-size:15px;font-family:inherit;color:#1f2937;background-color:#f9fafb;border:2px solid #e5e7eb;border-radius:8px;box-sizing:border-box;text-align:center"
+          />
+        </div>
 
-function startSorting() {
-  showError("");
-  const items = parseItems(""); 
-  logic = new MergeSortLogic(items);
-  battleCount = 0;
-  showScreen("sort");
-  refreshSortUI();
-}
+        <div class="actions">
+          <button type="button" class="btn-secondary" id="save-btn">
+            Share results
+          </button>
+          <button type="button" class="btn-primary" id="restart-btn">
+            Start over
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
 
+<script>
+"use strict";
 
-     function handleChoice(choice) {
-  if (choice === "undo") {
-    if (logic.undo()) {
-      battleCount = Math.max(0, battleCount - 1);
-      // Принудительно очищаем память старых плееров перед откатом раунда
-      cleanupVideosMemory();
-      refreshSortUI();
-    }
-    return;
-  }
-
-  logic.recordChoice(choice);
-  battleCount++;
-  // Принудительно очищаем память старых плееров перед следующим раундом
-  cleanupVideosMemory();
-  refreshSortUI();
-}
-
-// Новая супер-важная функция очистки оперативной памяти для iOS / Safari
-function cleanupVideosMemory() {
-  const oldVideos = document.querySelectorAll("#left-card video, #right-card video, button video, .sort-btn video");
-  oldVideos.forEach(video => {
-    try {
-      video.pause();
-      video.src = ""; // Опустошаем источник файла
-      video.removeAttribute("src"); // Полностью удаляем атрибут источника
-      video.load(); // Заставляем Safari принудительно сбросить буфер из ОЗУ
-    } catch (e) {
-      console.log("Видео уже было очищено или отсутствует");
-    }
-  });
-}
-
-function refreshSortUI() {
-  const pair = logic.getNextPair();
-
-  if (!pair) {
-    cleanupVideosMemory();
-    // Вот эта строчка теперь преобразует индексы в реальные объекты видео:
-    finalRanking = logic.getFinalRanking().map(index => tiktoks[index]);
-    showResults(finalRanking);
-    return;
-  }
-
-  const [left, right] = pair;
-  btnLeft.innerHTML = getTikTokHTML(left);
-  btnRight.innerHTML = getTikTokHTML(right);
-
-  battleLabel.textContent = `Battle #${battleCount + 1}`;
-  const progress = logic.getProgress();
-  progressText.textContent = `${Math.round(progress)}% sorted`;
-  progressFill.style.width = `${progress}%`;
-  btnUndo.disabled = !logic.canUndo();
-}
-
-    class MergeSortLogic {
-  constructor(items) {
-    this.totalItems = items.length;
-    this.queue = items.map((item) => [item]);
-    this.leftSet = [];
-    this.rightSet = [];
-    this.merged = [];
-    this.i = 0;
-    this.j = 0;
-
-    this.totalMergesNeeded = items.length - 1;
-    this.mergesCompleted = 0;
-    this.history = [];
-  }
-
-  saveState() {
-    this.history.push({
-      queue: this.queue.map((g) => [...g]),
-      leftSet: [...this.leftSet],
-      rightSet: [...this.rightSet],
-      merged: [...this.merged],
-      i: this.i,
-      j: this.j,
-      mergesCompleted: this.mergesCompleted,
-    });
-  }
-
-  canUndo() {
-    return this.history.length > 0;
-  }
-
-  undo() {
-    if (!this.canUndo()) return false;
-
-    const state = this.history.pop();
-    this.queue = state.queue;
-    this.leftSet = state.leftSet;
-    this.rightSet = state.rightSet;
-    this.merged = state.merged;
-    this.i = state.i;
-    this.j = state.j;
-    this.mergesCompleted = state.mergesCompleted;
-    return true;
-  }
-
-  getProgress() {
-    if (this.totalMergesNeeded === 0) return 100;
-
-    let base = (this.mergesCompleted / this.totalMergesNeeded) * 100;
-
-    if (this.leftSet.length && this.rightSet.length) {
-      const currentTotal = this.leftSet.length + this.rightSet.length;
-      const currentDone = this.i + this.j;
-      const partial = (currentDone / currentTotal / this.totalMergesNeeded) * 100;
-      base += partial;
-    }
-
-    return Math.min(99, base);
-  }
-
-  recordChoice(choice) {
-    this.saveState();
-
-    if (choice === "equal") {
-      this.merged.push(this.leftSet[this.i]);
-      this.merged.push(this.rightSet[this.j]);
-      this.i++;
-      this.j++;
-    } else if (choice === 0) {
-      this.merged.push(this.leftSet[this.i]);
-      this.i++;
-    } else {
-      this.merged.push(this.rightSet[this.j]);
-      this.j++;
-    }
-
-    if (this.i >= this.leftSet.length) {
-      this.merged.push(...this.rightSet.slice(this.j));
-      this.finalizeMergeStep();
-    } else if (this.j >= this.rightSet.length) {
-      this.merged.push(...this.leftSet.slice(this.i));
-      this.finalizeMergeStep();
-    }
-  }
-
-  getNextPair() {
-    if (!this.leftSet.length && !this.rightSet.length) {
-      if (this.queue.length <= 1) return null;
-      this.leftSet = this.queue.shift();
-      this.rightSet = this.queue.shift();
-      this.merged = [];
-      this.i = 0;
-      this.j = 0;
-    }
-    return [this.leftSet[this.i], this.rightSet[this.j]];
-  }
-
-  finalizeMergeStep() {
-    this.queue.push(this.merged);
-    this.leftSet = [];
-    this.rightSet = [];
-    this.mergesCompleted++;
-  }
-
-  getFinalRanking() {
-    return this.queue[0] ?? [];
-  }
-}
+/* =========================================
+   1. СПИСОК ВИДЕО
+   ========================================= */
 
 const tiktoks = [
   { id: "18N-Njj-LRWpk0yqyCcbCBUkks1ZBiimF", desc: "эмммммм я в восторге", tiktokUrl: "https://www.tiktok.com/t/ZTyhMcJKq/" },
@@ -367,7 +88,7 @@ const tiktoks = [
   { id: "13kvGGBICS05SlzDL58aDo7F-MMbC7zXn", desc: "ноль попаданий", tiktokUrl: "https://www.tiktok.com/t/ZTyhrjUeu/" },
   { id: "1vWPS8HTVTLnmTioFt0liFe_ATxTHtnUg", desc: "super idol de xiào róng", tiktokUrl: "https://www.tiktok.com/t/ZTyhrL7E8/" },
   { id: "1VNQmtKJkw070g9Q57NpEVI-IB5MsgcKY", desc: "я не понимаю почему это всегда рюль", tiktokUrl: "https://www.tiktok.com/t/ZTyhrYRm2/" },
-  { id: "1lXcIg6RbDF7uZUTqa2UIFGRUYwRMoSSu", desc: "bro chill", tiktokUrl: "https://tiktok.com" },
+  { id: "1lXcIg6RbDF7uZUTqa2UIFGRUYwRMoSSu", desc: "bro chill", tiktokUrl: "https://www.tiktok.com/t/ZTyhrEjFb/" },
   { id: "12DvmBBBsqgI9AQvzD8dqgr6bEaDoAjj3", desc: "вот этот мой самый любимый в мире", tiktokUrl: "https://www.tiktok.com/t/ZTyhrpguK/" },
   { id: "10iGnqfoFhMFrdrBpwHERzw2ip9Pt5W66", desc: "то самое состязание", tiktokUrl: "https://www.tiktok.com/t/ZTyhrWUQf/" },
   { id: "1qcnMe6Sh1k92PMtr0RaffreFKKyCVps4", desc: "и тут тоже рюль", tiktokUrl: "https://www.tiktok.com/t/ZTyhrWDUg/" },
@@ -403,140 +124,613 @@ const tiktoks = [
   { id: "1gRM7SEwBgQGKeDsBzPQfMPGNmoR8DpyJ", desc: "школьники", tiktokUrl: "https://www.tiktok.com/t/ZTyhhoaq2/" },
   { id: "1XRDRAKeeTuPb58R9Kb4rprPiYKdKSadc", desc: " ??????? забоялись", tiktokUrl: "https://www.tiktok.com/t/ZTyhkMYtc/" },
   { id: "1vyFSOOVcLBkzVjHjshqVCmPafpg_Sq2D", desc: "утиное", tiktokUrl: "https://www.tiktok.com/t/ZTyhku2vy/" },
-  { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "история повторяется", tiktokUrl: "https://www.tiktok.com/t/ZTyhkkQ49/" }
- { id: "1HZjefWc8kuHlkWh4n_J_m_z8Hwc7ePKe", desc: ".............", tiktokUrl: "https://www.tiktok.com/t/ZTyKFs7XU/" },
+  { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "история повторяется", tiktokUrl: "https://www.tiktok.com/t/ZTyhkkQ49/" },
+  { id: "1HZjefWc8kuHlkWh4n_J_m_z8Hwc7ePKe", desc: ".............", tiktokUrl: "https://www.tiktok.com/t/ZTyKFs7XU/" },
   { id: "1fhGJpRigzoOiPz71blU0yOBhaHuF-kp6", desc: "это невероятно", tiktokUrl: "https://www.tiktok.com/t/ZTyKFKdVD/" },
   { id: "1hP7iYgWIZwQ1f7uc_-fTpG20vuxEljoU", desc: "оюль....", tiktokUrl: "https://www.tiktok.com/t/ZTyKFty4C/" }
 ];
 
-function showResults(ranking) {
-  if (!ranking || ranking.length === 0 || typeof ranking[0] === 'number') {
-     console.error("Ошибка данных в результатах");
-     return;
+/* =========================================
+   2. ЭЛЕМЕНТЫ СТРАНИЦЫ
+   ========================================= */
+
+const screens = {
+  sort: document.getElementById("sort-screen"),
+  results: document.getElementById("results-screen")
+};
+
+const battleLabel = document.getElementById("battle-label");
+const progressText = document.getElementById("progress-text");
+const progressFill = document.getElementById("progress-fill");
+const btnLeft = document.getElementById("btn-left");
+const btnRight = document.getElementById("btn-right");
+const btnEqual = document.getElementById("btn-equal");
+const btnUndo = document.getElementById("btn-undo");
+const resultsList = document.getElementById("results-list");
+
+const STORAGE_KEY =
+  "lngshot-sort-progress-v2:" + window.location.pathname;
+
+let logic = null;
+let battleCount = 0;
+let finalRanking = [];
+
+/* =========================================
+   3. ЭКРАНЫ
+   ========================================= */
+
+function showScreen(screenId) {
+  Object.entries(screens).forEach(([id, element]) => {
+    const active = id === screenId;
+    element.classList.toggle("active", active);
+    element.style.display = active ? "block" : "none";
+  });
+}
+
+/* =========================================
+   4. ВИДЕО GOOGLE DRIVE
+   ========================================= */
+
+function getTikTokHTML(index) {
+  const item = tiktoks[index];
+  if (!item) return "";
+
+  const driveUrl =
+    "https://drive.google.com/file/d/" +
+    encodeURIComponent(item.id) +
+    "/preview";
+
+  const safeTikTokUrl = escapeHtml(item.tiktokUrl);
+  const safeDesc = escapeHtml(item.desc);
+
+  return `
+    <div class="video-card-wrapper"
+         data-id="${escapeHtml(item.id)}"
+         style="width:100%;max-width:280px;margin:0 auto;display:block;overflow:hidden;border-radius:8px;">
+
+      <div style="position:relative;width:100%;height:0;padding-bottom:177.77%;overflow:hidden;background:#000;border-radius:8px;">
+
+        <iframe
+          src="${driveUrl}"
+          title="${safeDesc}"
+          allow="autoplay; fullscreen"
+          loading="eager"
+          referrerpolicy="strict-origin-when-cross-origin"
+          style="position:absolute;top:50%;left:50%;width:420%;height:300%;transform:translate(-50%,-50%) scale(0.238,0.333);border:none;"
+        ></iframe>
+
+      </div>
+
+      <div class="desc" style="text-align:center;margin-top:10px;font-size:14px;">
+        <a href="${safeTikTokUrl}"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="tiktok-link"
+           onclick="event.stopPropagation()">${safeDesc}</a>
+      </div>
+    </div>
+  `;
+}
+
+function cleanupVideosMemory() {
+  [btnLeft, btnRight].forEach(container => {
+    if (!container) return;
+
+    container.querySelectorAll("iframe").forEach(iframe => {
+      iframe.src = "about:blank";
+      iframe.remove();
+    });
+  });
+}
+
+/* =========================================
+   5. АЛГОРИТМ СОРТИРОВКИ
+   ========================================= */
+
+class MergeSortLogic {
+  constructor(items) {
+    this.totalItems = items.length;
+    this.queue = items.map(item => [item]);
+    this.leftSet = [];
+    this.rightSet = [];
+    this.merged = [];
+    this.i = 0;
+    this.j = 0;
+    this.totalMergesNeeded = Math.max(0, items.length - 1);
+    this.mergesCompleted = 0;
+    this.history = [];
   }
 
-  resultsList.innerHTML = ranking
-    .map((item, i) => {
-      return `
-        <li class="result-item" style="margin-bottom: 12px; font-size: 16px; text-align: left;">
-          <span class="rank" style="font-weight: bold; color: #6366f1;">${i + 1}.</span> 
-          <div class="result-info" style="display: inline-block; margin-left: 8px;">
-            <span class="result-desc">"${escapeHtml(item.desc)}"</span> 
-            <a href="${item.tiktokUrl}" target="_blank" rel="noopener noreferrer" class="tiktok-link-btn" style="margin-left: 10px; color: #6366f1; text-decoration: none; font-size: 13px; font-weight: bold;">
-               Смотреть видео ↗
-            </a>
-          </div>
-        </li>
-      `;
-    })
-    .join("");
+  saveState() {
+    this.history.push({
+      queue: this.queue.map(group => [...group]),
+      leftSet: [...this.leftSet],
+      rightSet: [...this.rightSet],
+      merged: [...this.merged],
+      i: this.i,
+      j: this.j,
+      mergesCompleted: this.mergesCompleted
+    });
+  }
+
+  canUndo() {
+    return this.history.length > 0;
+  }
+
+  undo() {
+    if (!this.canUndo()) return false;
+
+    const state = this.history.pop();
+
+    this.queue = state.queue;
+    this.leftSet = state.leftSet;
+    this.rightSet = state.rightSet;
+    this.merged = state.merged;
+    this.i = state.i;
+    this.j = state.j;
+    this.mergesCompleted = state.mergesCompleted;
+
+    return true;
+  }
+
+  getProgress() {
+    if (this.totalMergesNeeded === 0) return 100;
+
+    let completed = this.mergesCompleted;
+
+    if (this.leftSet.length && this.rightSet.length) {
+      const total = this.leftSet.length + this.rightSet.length;
+      const compared = this.i + this.j;
+
+      completed += total ? compared / total : 0;
+    }
+
+    return Math.min(
+      99,
+      Math.max(0, completed / this.totalMergesNeeded * 100)
+    );
+  }
+
+  recordChoice(choice) {
+    if (!this.leftSet.length || !this.rightSet.length) return;
+
+    if (this.i >= this.leftSet.length ||
+        this.j >= this.rightSet.length) return;
+
+    this.saveState();
+
+    if (choice === "equal") {
+      this.merged.push(this.leftSet[this.i++]);
+      this.merged.push(this.rightSet[this.j++]);
+    } else if (choice === 0) {
+      this.merged.push(this.leftSet[this.i++]);
+    } else {
+      this.merged.push(this.rightSet[this.j++]);
+    }
+
+    if (this.i >= this.leftSet.length) {
+      this.merged.push(...this.rightSet.slice(this.j));
+      this.finalizeMergeStep();
+    } else if (this.j >= this.rightSet.length) {
+      this.merged.push(...this.leftSet.slice(this.i));
+      this.finalizeMergeStep();
+    }
+  }
+
+  getNextPair() {
+    if (!this.leftSet.length && !this.rightSet.length) {
+      if (this.queue.length <= 1) return null;
+
+      this.leftSet = this.queue.shift();
+      this.rightSet = this.queue.shift();
+      this.merged = [];
+      this.i = 0;
+      this.j = 0;
+    }
+
+    if (
+      this.i >= this.leftSet.length ||
+      this.j >= this.rightSet.length
+    ) {
+      return null;
+    }
+
+    return [this.leftSet[this.i], this.rightSet[this.j]];
+  }
+
+  finalizeMergeStep() {
+    this.queue.push(this.merged);
+    this.leftSet = [];
+    this.rightSet = [];
+    this.merged = [];
+    this.i = 0;
+    this.j = 0;
+    this.mergesCompleted++;
+  }
+
+  getFinalRanking() {
+    return this.queue[0] || [];
+  }
+}
+
+/* =========================================
+   6. СОХРАНЕНИЕ ПРОГРЕССА
+   ========================================= */
+
+function saveSortProgress() {
+  if (!logic) return;
+
+  const state = {
+    version: 2,
+    videoCount: tiktoks.length,
+    battleCount,
+    queue: logic.queue,
+    leftSet: logic.leftSet,
+    rightSet: logic.rightSet,
+    merged: logic.merged,
+    i: logic.i,
+    j: logic.j,
+    mergesCompleted: logic.mergesCompleted,
+    history: logic.history
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.error("Не удалось сохранить прогресс:", error);
+  }
+}
+
+function isValidIndex(index) {
+  return Number.isInteger(index) &&
+    index >= 0 &&
+    index < tiktoks.length;
+}
+
+function isValidGroups(groups) {
+  return Array.isArray(groups) &&
+    groups.every(group =>
+      Array.isArray(group) && group.every(isValidIndex)
+    );
+}
+
+function isValidHistory(history) {
+  return Array.isArray(history) && history.every(state =>
+    state &&
+    isValidGroups(state.queue) &&
+    isValidGroups([state.leftSet, state.rightSet, state.merged]) &&
+    Number.isInteger(state.i) && state.i >= 0 &&
+    Number.isInteger(state.j) && state.j >= 0 &&
+    Number.isInteger(state.mergesCompleted) &&
+    state.mergesCompleted >= 0
+  );
+}
+
+function restoreSortProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+
+    const state = JSON.parse(raw);
+
+    const valid =
+      state.version === 2 &&
+      state.videoCount === tiktoks.length &&
+      Number.isInteger(state.battleCount) &&
+      state.battleCount >= 0 &&
+      isValidGroups(state.queue) &&
+      isValidGroups([state.leftSet, state.rightSet, state.merged]) &&
+      isValidHistory(state.history) &&
+      Number.isInteger(state.i) && state.i >= 0 &&
+      Number.isInteger(state.j) && state.j >= 0 &&
+      Number.isInteger(state.mergesCompleted) &&
+      state.mergesCompleted >= 0;
+
+    if (!valid) {
+      localStorage.removeItem(STORAGE_KEY);
+      return false;
+    }
+
+    const restored = new MergeSortLogic(
+      tiktoks.map((_, index) => index)
+    );
+
+    restored.queue = state.queue;
+    restored.leftSet = state.leftSet;
+    restored.rightSet = state.rightSet;
+    restored.merged = state.merged;
+    restored.i = state.i;
+    restored.j = state.j;
+    restored.mergesCompleted = state.mergesCompleted;
+    restored.history = state.history;
+
+    logic = restored;
+    battleCount = state.battleCount;
+
+    return true;
+  } catch (error) {
+    console.error("Не удалось восстановить прогресс:", error);
+    return false;
+  }
+}
+
+/* =========================================
+   7. УПРАВЛЕНИЕ СОРТИРОВКОЙ
+   ========================================= */
+
+function startSorting() {
+  cleanupVideosMemory();
+
+  logic = new MergeSortLogic(
+    tiktoks.map((_, index) => index)
+  );
+
+  battleCount = 0;
+  finalRanking = [];
+
+  saveSortProgress();
+  showScreen("sort");
+  refreshSortUI();
+}
+
+function handleChoice(choice) {
+  if (!logic) return;
+
+  if (choice === "undo") {
+    if (logic.undo()) {
+      battleCount = Math.max(0, battleCount - 1);
+      cleanupVideosMemory();
+      saveSortProgress();
+      refreshSortUI();
+    }
+    return;
+  }
+
+  logic.recordChoice(choice);
+  battleCount++;
+
+  cleanupVideosMemory();
+  saveSortProgress();
+  refreshSortUI();
+}
+
+function refreshSortUI() {
+  if (!logic) return;
+
+  const pair = logic.getNextPair();
+
+  if (!pair) {
+    cleanupVideosMemory();
+
+    finalRanking = logic
+      .getFinalRanking()
+      .map(index => tiktoks[index]);
+
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      console.error("Не удалось очистить прогресс:", error);
+    }
+
+    showResults(finalRanking);
+    return;
+  }
+
+  saveSortProgress();
+
+  const [left, right] = pair;
+
+  btnLeft.innerHTML = getTikTokHTML(left);
+  btnRight.innerHTML = getTikTokHTML(right);
+
+  battleLabel.textContent = `Battle #${battleCount + 1}`;
+
+  const progress = logic.getProgress();
+
+  progressText.textContent = `${Math.round(progress)}% sorted`;
+  progressFill.style.width = `${progress}%`;
+
+  btnUndo.disabled = !logic.canUndo();
+}
+
+/* =========================================
+   8. РЕЗУЛЬТАТЫ И ССЫЛКИ
+   ========================================= */
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function showResults(ranking) {
+  if (!Array.isArray(ranking) || !ranking.length) {
+    console.error("Ошибка данных в результатах");
+    return;
+  }
+
+  resultsList.innerHTML = ranking.map((item, index) => `
+    <li class="result-item"
+        style="margin-bottom:12px;font-size:16px;text-align:left">
+      <span class="rank" style="font-weight:bold;color:#6366f1">
+        ${index + 1}.
+      </span>
+      <div class="result-info" style="display:inline-block;margin-left:8px">
+        <span class="result-desc">"${escapeHtml(item.desc)}"</span>
+        <a
+          href="${escapeHtml(item.tiktokUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tiktok-link-btn"
+          style="margin-left:10px;color:#6366f1;text-decoration:none;font-size:13px;font-weight:bold"
+        >Смотреть видео ↗</a>
+      </div>
+    </li>
+  `).join("");
 
   showScreen("results");
 }
 
-function escapeHtml(text) {
-  if (!text) return "";
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+function packResults(ranking) {
+  const indices = ranking.map(item =>
+    tiktoks.findIndex(video => video.id === item.id)
+  );
 
-function packResults(arr) {
-  const indices = arr.map(item => tiktoks.findIndex(t => t.id === item.id));
-  const bytes = new Uint8Array(indices);
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
+  if (indices.some(index => index < 0)) {
+    throw new Error("Не удалось подготовить результаты");
   }
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+\$/, '');
+
+  const bytes = new Uint8Array(indices);
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 }
 
-function unpackResults(str) {
+function unpackResults(value) {
   try {
-    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-    while (base64.length % 4) { base64 += '='; }
+    let base64 = value.replace(/-/g, "+").replace(/_/g, "/");
+
+    while (base64.length % 4) base64 += "=";
+
     const binary = atob(base64);
-    
-    const objectsArray = [];
+    const result = [];
+
     for (let i = 0; i < binary.length; i++) {
       const index = binary.charCodeAt(i);
-      if (tiktoks[index]) { objectsArray.push(tiktoks[index]); }
+
+      if (!isValidIndex(index)) return null;
+      result.push(tiktoks[index]);
     }
-    return objectsArray;
-  } catch (e) {
-    console.error("Ошибка чтения ссылки результатов:", e);
+
+    return result.length ? result : null;
+  } catch (error) {
+    console.error("Ошибка чтения результатов:", error);
     return null;
   }
 }
 
-function saveResults() {
-  const usernameInput = document.getElementById("username-input");
-  const username = usernameInput ? usernameInput.value.trim() : "";
-  const packedData = packResults(finalRanking);
-  
-  let shareUrl = `${window.location.origin}${window.location.pathname}?`;
-  if (username) { shareUrl += `user=${encodeURIComponent(username)}&`; }
-  shareUrl += `r=${packedData}`;
-  
-  navigator.clipboard.writeText(shareUrl).then(() => {
-    const btn = document.getElementById("save-btn");
-    if (btn) {
-       const original = btn.textContent;
-       btn.textContent = "Link Copied!";
-       setTimeout(() => { btn.textContent = original; }, 2000);
+async function saveResults() {
+  const username = document
+    .getElementById("username-input")
+    .value.trim();
+
+  try {
+    const packedData = packResults(finalRanking);
+
+    const shareUrl = new URL(
+      window.location.pathname,
+      window.location.origin
+    );
+
+    if (username) {
+      shareUrl.searchParams.set("user", username);
     }
-  }).catch(err => console.error("Не удалось скопировать ссылку:", err));
+
+    shareUrl.searchParams.set("r", packedData);
+
+    try {
+      await navigator.clipboard.writeText(shareUrl.href);
+    } catch (error) {
+      window.prompt("Скопируй ссылку на результаты:", shareUrl.href);
+      return;
+    }
+
+    const button = document.getElementById("save-btn");
+    const originalText = button.textContent;
+
+    button.textContent = "Link Copied!";
+
+    setTimeout(() => {
+      button.textContent = originalText;
+    }, 2000);
+  } catch (error) {
+    console.error("Не удалось создать ссылку:", error);
+    alert("Не удалось создать ссылку на результаты.");
+  }
 }
 
-document.addEventListener("click", (event) => {
-  if (event.target && event.target.id === "save-btn") saveResults();
-  if (event.target && event.target.id === "restart-btn") {
-    window.location.href = window.location.origin + window.location.pathname;
+/* =========================================
+   9. КНОПКИ
+   ========================================= */
+
+btnLeft.addEventListener("click", () => handleChoice(0));
+btnRight.addEventListener("click", () => handleChoice(1));
+btnEqual.addEventListener("click", () => handleChoice("equal"));
+btnUndo.addEventListener("click", () => handleChoice("undo"));
+
+document.getElementById("save-btn").addEventListener("click", saveResults);
+
+document.getElementById("restart-btn").addEventListener("click", () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error("Не удалось очистить прогресс:", error);
   }
+
+  window.location.href =
+    window.location.origin + window.location.pathname;
 });
 
-document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
-document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
-document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
-document.getElementById("btn-undo").addEventListener("click", () => handleChoice("undo"));
+/* =========================================
+   10. ЗАПУСК И ВОССТАНОВЛЕНИЕ
+   ========================================= */
 
-window.onload = function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const resultData = urlParams.get('r') || urlParams.get('result');
-  const userData = urlParams.get('user');
-  const usernameContainer = document.getElementById("username-container");
-  const restartBtn = document.getElementById("restart-btn");
+function initializeApp() {
+  const params = new URLSearchParams(window.location.search);
+  const resultData = params.get("r") || params.get("result");
+  const userData = params.get("user");
+
+  const usernameContainer =
+    document.getElementById("username-container");
+
+  const restartBtn =
+    document.getElementById("restart-btn");
 
   if (resultData) {
-    const orderedIndices = resultData.includes(',') 
-      ? resultData.split(',').map(Number).map(idx => tiktoks[idx]) 
-      : unpackResults(resultData);
+    const ranking = unpackResults(resultData);
 
-    if (orderedIndices && orderedIndices.length > 0) {
-      finalRanking = orderedIndices;
+    if (ranking) {
+      finalRanking = ranking;
       showResults(finalRanking);
-      
-      const resultsHeader = document.getElementById("results-title");
-      if (resultsHeader && userData) {
-        resultsHeader.textContent = `${decodeURIComponent(userData)}'s results`;
-      }
-      
+
       if (userData) {
-        if (restartBtn) restartBtn.textContent = "Try it yourself";
-        if (usernameContainer) usernameContainer.style.display = "none";
+        document.getElementById("results-title").textContent =
+          `${userData}'s results`;
+
+        restartBtn.textContent = "Try it yourself";
+        usernameContainer.style.display = "none";
       }
-    } else {
-      startSorting();
+
+      return;
     }
+  }
+
+  usernameContainer.style.display = "flex";
+  restartBtn.textContent = "Start over";
+
+  if (restoreSortProgress()) {
+    showScreen("sort");
+    refreshSortUI();
   } else {
-    if (usernameContainer) usernameContainer.style.display = "block";
-    if (restartBtn) restartBtn.textContent = "Start over";
     startSorting();
   }
-};
+}
+
+initializeApp();
+
+/* Дополнительное сохранение при уходе со страницы */
+window.addEventListener("pagehide", saveSortProgress);
 </script>
 </body>
 </html>
