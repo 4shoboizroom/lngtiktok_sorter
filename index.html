@@ -160,21 +160,17 @@ function getTikTokHTML(index) {
   `;
 }
 
-// ЭТУ ФУНКЦИЮ ПРОСТО ВСТАВЬ СРАЗУ НИЖЕ (она будет строкой 159 и далее)
 function cleanupVideosMemory() {
-  // берем именно твои переменные кнопок, которые используются в refreshSortUI
   const containers = [btnLeft, btnRight];
-  
   containers.forEach(container => {
     if (container) {
-      // ищем айфреймы строго внутри этих двух кнопок
       const iframes = container.querySelectorAll("iframe");
       iframes.forEach(iframe => {
         try {
-          iframe.src = "about:blank"; // разрываем связь с гугл диском
-          iframe.remove(); // удаляем элемент
+          iframe.src = "about:blank"; 
+          iframe.remove(); 
         } catch (e) {
-          console.log("ошибка очистки iframe:", e);
+          console.log("Ошибка очистки iframe:", e);
         }
       });
     }
@@ -236,17 +232,14 @@ function refreshSortUI() {
   const pair = logic.getNextPair();
 
   if (!pair) {
-    // Чистим видео-память перед тем, как уйти на экран результатов
     cleanupVideosMemory();
-    finalRanking = logic.getFinalRanking();
+    // Вот эта строчка теперь преобразует индексы в реальные объекты видео:
+    finalRanking = logic.getFinalRanking().map(index => tiktoks[index]);
     showResults(finalRanking);
     return;
   }
 
   const [left, right] = pair;
-  
-  // Рендерим новые карточки. 
-  // ВАЖНО: убедись, что btnLeft и btnRight соответствуют твоим кнопкам выбора
   btnLeft.innerHTML = getTikTokHTML(left);
   btnRight.innerHTML = getTikTokHTML(right);
 
@@ -416,9 +409,7 @@ const tiktoks = [
   { id: "1hP7iYgWIZwQ1f7uc_-fTpG20vuxEljoU", desc: "оюль....", tiktokUrl: "https://www.tiktok.com/t/ZTyKFty4C/" }
 ];
 
-// Новая, ультра-легкая функция для отображения результатов
 function showResults(ranking) {
-  // Проверяем, что массив не пустой и содержит объекты, а не просто цифры
   if (!ranking || ranking.length === 0 || typeof ranking[0] === 'number') {
      console.error("Ошибка данных в результатах");
      return;
@@ -426,13 +417,12 @@ function showResults(ranking) {
 
   resultsList.innerHTML = ranking
     .map((item, i) => {
-      // Заменяем iFrame или плеер на легкую текстовую разметку с внешней кнопкой
       return `
-        <li class="result-item">
-          <span class="rank">${i + 1}.</span> 
-          <div class="result-info">
-            <p class="result-desc">"${escapeHtml(item.desc)}"</p>
-            <a href="${item.tiktokUrl}" target="_blank" rel="noopener noreferrer" class="tiktok-link-btn">
+        <li class="result-item" style="margin-bottom: 12px; font-size: 16px; text-align: left;">
+          <span class="rank" style="font-weight: bold; color: #6366f1;">${i + 1}.</span> 
+          <div class="result-info" style="display: inline-block; margin-left: 8px;">
+            <span class="result-desc">"${escapeHtml(item.desc)}"</span> 
+            <a href="${item.tiktokUrl}" target="_blank" rel="noopener noreferrer" class="tiktok-link-btn" style="margin-left: 10px; color: #6366f1; text-decoration: none; font-size: 13px; font-weight: bold;">
                Смотреть видео ↗
             </a>
           </div>
@@ -454,16 +444,8 @@ function escapeHtml(text) {
     .replace(/'/g, "&#039;");
 }
 
-// Функция для упаковки массива индексов в Base64 строку
 function packResults(arr) {
-  // Превращаем массив объектов (или индексов) строго в массив индексов объектов из tiktoks
-  const indices = arr.map(item => {
-     if (typeof item === 'object') {
-        return tiktoks.findIndex(t => t.id === item.id);
-     }
-     return item;
-  });
-
+  const indices = arr.map(item => tiktoks.findIndex(t => t.id === item.id));
   const bytes = new Uint8Array(indices);
   let binary = '';
   for (let i = 0; i < bytes.byteLength; i++) {
@@ -472,7 +454,6 @@ function packResults(arr) {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+\$/, '');
 }
 
-// ИСПРАВЛЕННАЯ функция распаковки: теперь она возвращает массив объектов, а не просто цифры!
 function unpackResults(str) {
   try {
     let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -482,12 +463,9 @@ function unpackResults(str) {
     const objectsArray = [];
     for (let i = 0; i < binary.length; i++) {
       const index = binary.charCodeAt(i);
-      // Защита от выхода за пределы массива данных
-      if (tiktoks[index]) {
-         objectsArray.push(tiktoks[index]);
-      }
+      if (tiktoks[index]) { objectsArray.push(tiktoks[index]); }
     }
-    return objectsArray; // Возвращает полноценные объекты тиктоков!
+    return objectsArray;
   } catch (e) {
     console.error("Ошибка чтения ссылки результатов:", e);
     return null;
@@ -497,14 +475,10 @@ function unpackResults(str) {
 function saveResults() {
   const usernameInput = document.getElementById("username-input");
   const username = usernameInput ? usernameInput.value.trim() : "";
-  
-  // finalRanking должен содержать текущий отсортированный массив объектов
   const packedData = packResults(finalRanking);
   
   let shareUrl = `${window.location.origin}${window.location.pathname}?`;
-  if (username) {
-    shareUrl += `user=${encodeURIComponent(username)}&`;
-  }
+  if (username) { shareUrl += `user=${encodeURIComponent(username)}&`; }
   shareUrl += `r=${packedData}`;
   
   navigator.clipboard.writeText(shareUrl).then(() => {
@@ -514,78 +488,55 @@ function saveResults() {
        btn.textContent = "Link Copied!";
        setTimeout(() => { btn.textContent = original; }, 2000);
     }
-  }).catch(err => {
-     console.error("Не удалось скопировать ссылку:", err);
-  });
+  }).catch(err => console.error("Не удалось скопировать ссылку:", err));
 }
 
 document.addEventListener("click", (event) => {
-  if (event.target && event.target.id === "save-btn") {
-    saveResults();
-  }
-  // чиним кнопку сброса/перезапуска
+  if (event.target && event.target.id === "save-btn") saveResults();
   if (event.target && event.target.id === "restart-btn") {
     window.location.href = window.location.origin + window.location.pathname;
   }
 });
 
-// Проверяем адресную строку строго при загрузке страницы
-const urlParams = new URLSearchParams(window.location.search);
-// Поддерживаем и старый параметр 'result', и новый сжатый 'r'
-const resultData = urlParams.get('r') || urlParams.get('result');
-const userData = urlParams.get('user');
-
-if (resultData) {
-  const orderedIndices = resultData.includes(',') ? resultData.split(',').map(Number) : unpackResults(resultData);
-  if (orderedIndices && orderedIndices.length > 0) {
-    finalRanking = orderedIndices;
-    showResults(finalRanking);
-    
-    const resultsHeader = document.getElementById("results-title");
-    if (resultsHeader && userData) {
-      resultsHeader.textContent = `${decodeURIComponent(userData)}'s results`;
-    }
-    
-    const usernameContainer = document.getElementById("username-container");
-    const restartBtn = document.getElementById("restart-btn");
-    
-    // если зашли по чужой именной ссылке — меняем текст кнопки на «try it yourself»
-    if (usernameContainer && (usernameContainer.style.display === "none" || !userData)) {
-      if (restartBtn) {
-        restartBtn.textContent = "try it yourself";
-      }
-    }
-  } else {
-    startSorting();
-  }
-} else {
-  // если параметров в ссылке нет — запускаем обычную игру
-  startSorting();
-}
-    
-      const usernameContainer = document.getElementById("username-container");
-    const restartBtn = document.getElementById("restart-btn");
-    
-    if (usernameContainer) {
-  if (userData) {
-    // Чужой результат по ссылке с именем
-    if (restartBtn) restartBtn.textContent = "Try it yourself";
-    usernameContainer.style.display = "none"; // Прячем инпут только для гостей
-  } else {
-    // Твой собственный свежий результат
-    if (restartBtn) restartBtn.textContent = "Start over";
-    usernameContainer.style.display = "block"; // Показываем инпут, чтобы ты могла ввести ник
-  }
-} 
-else {
-  // если параметров в ссылке нет — это обычная игра, запускаем баттлы
-  startSorting();
-}
-  
 document.getElementById("btn-left").addEventListener("click", () => handleChoice(0));
 document.getElementById("btn-right").addEventListener("click", () => handleChoice(1));
 document.getElementById("btn-equal").addEventListener("click", () => handleChoice("equal"));
 document.getElementById("btn-undo").addEventListener("click", () => handleChoice("undo"));
+
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const resultData = urlParams.get('r') || urlParams.get('result');
+  const userData = urlParams.get('user');
+  const usernameContainer = document.getElementById("username-container");
+  const restartBtn = document.getElementById("restart-btn");
+
+  if (resultData) {
+    const orderedIndices = resultData.includes(',') 
+      ? resultData.split(',').map(Number).map(idx => tiktoks[idx]) 
+      : unpackResults(resultData);
+
+    if (orderedIndices && orderedIndices.length > 0) {
+      finalRanking = orderedIndices;
+      showResults(finalRanking);
+      
+      const resultsHeader = document.getElementById("results-title");
+      if (resultsHeader && userData) {
+        resultsHeader.textContent = `${decodeURIComponent(userData)}'s results`;
+      }
+      
+      if (userData) {
+        if (restartBtn) restartBtn.textContent = "Try it yourself";
+        if (usernameContainer) usernameContainer.style.display = "none";
+      }
+    } else {
+      startSorting();
+    }
+  } else {
+    if (usernameContainer) usernameContainer.style.display = "block";
+    if (restartBtn) restartBtn.textContent = "Start over";
+    startSorting();
+  }
+};
 </script>
 </body>
 </html>
