@@ -547,33 +547,64 @@ function escapeHtml(value) {
   })[char]);
 }
 
+
 function showResults(ranking) {
   if (!Array.isArray(ranking) || !ranking.length) {
     console.error("Ошибка данных в результатах");
     return;
   }
 
-  resultsList.innerHTML = ranking.map((item, index) => `
-    <li class="result-item"
-        style="margin-bottom:12px;font-size:16px;text-align:left">
-      <span class="rank" style="font-weight:bold;color:#6366f1">
-        ${index + 1}.
-      </span>
-      <div class="result-info" style="display:inline-block;margin-left:8px">
-        <span class="result-desc">"${escapeHtml(item.desc)}"</span>
-        <a
-          href="${escapeHtml(item.tiktokUrl)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="tiktok-link-btn"
-          style="margin-left:10px;color:#6366f1;text-decoration:none;font-size:13px;font-weight:bold"
-        >Смотреть видео ↗</a>
-      </div>
-    </li>
-  `).join("");
+  resultsList.innerHTML = ranking.map((item, index) => {
+    const safeId = encodeURIComponent(item.id);
+    const safeDesc = escapeHtml(item.desc);
+    const safeTikTokUrl = escapeHtml(item.tiktokUrl);
+
+    const driveUrl =
+      `https://drive.google.com/file/d/${safeId}/preview`;
+
+    return `
+      <li class="result-item"
+          style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e5e7eb;">
+
+        <div style="font-size:18px;font-weight:bold;color:#6366f1;margin-bottom:10px;">
+          ${index + 1} место
+        </div>
+
+        <div style="width:100%;max-width:320px;margin:0 auto 12px;overflow:hidden;border-radius:10px;background:#000;">
+          <div style="position:relative;width:100%;height:0;padding-bottom:177.77%;overflow:hidden;">
+
+            <iframe
+              src="${driveUrl}"
+              title="${safeDesc}"
+              allow="autoplay; fullscreen"
+              loading="lazy"
+              style="position:absolute;top:50%;left:50%;width:420%;height:300%;transform:translate(-50%,-50%) scale(0.238,0.333);border:0;"
+            ></iframe>
+
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:15px;margin-bottom:10px;">
+          ${safeDesc}
+        </div>
+
+        <div style="text-align:center;">
+          <a
+            href="${safeTikTokUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tiktok-link-btn"
+            style="color:#6366f1;text-decoration:none;font-size:14px;font-weight:bold;"
+          >Смотреть в TikTok ↗</a>
+        </div>
+
+      </li>
+    `;
+  }).join("");
 
   showScreen("results");
 }
+
 
 function packResults(ranking) {
   const indices = ranking.map(item =>
