@@ -548,6 +548,7 @@ function escapeHtml(value) {
 }
 
 
+
 function showResults(ranking) {
   if (!Array.isArray(ranking) || !ranking.length) {
     console.error("Ошибка данных в результатах");
@@ -556,55 +557,93 @@ function showResults(ranking) {
 
   resultsList.innerHTML = ranking.map((item, index) => {
     const safeId = encodeURIComponent(item.id);
-    const safeDesc = escapeHtml(item.desc);
     const safeTikTokUrl = escapeHtml(item.tiktokUrl);
+    const safeDesc = escapeHtml(item.desc);
 
     const driveUrl =
       `https://drive.google.com/file/d/${safeId}/preview`;
 
     return `
-      <li class="result-item"
-          style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e5e7eb;">
+      <li class="result-item" style="
+        list-style: none;
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        column-gap: 12px;
+        align-items: start;
+        margin: 0 0 24px;
+        padding: 24px 0;
+        border-bottom: 1px solid #e5e7eb;
+      ">
 
-        <div style="font-size:18px;font-weight:bold;color:#6366f1;margin-bottom:10px;">
-          ${index + 1} место
+        <div style="
+          padding-top: 8px;
+          text-align: center;
+          color: #6366f1;
+          font-size: 18px;
+          font-weight: 700;
+          line-height: 1.4;
+        ">
+          <div style="font-size: 28px;">${index + 1}</div>
+          <div>место</div>
         </div>
 
-        <div style="width:100%;max-width:320px;margin:0 auto 12px;overflow:hidden;border-radius:10px;background:#000;">
-          <div style="position:relative;width:100%;height:0;padding-bottom:177.77%;overflow:hidden;">
+        <div style="
+          width: 100%;
+          max-width: 220px;
+          justify-self: center;
+          min-width: 0;
+        ">
 
+          <div style="
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+          ">
             <iframe
               src="${driveUrl}"
               title="${safeDesc}"
               allow="autoplay; fullscreen"
               loading="lazy"
-              style="position:absolute;top:50%;left:50%;width:420%;height:300%;transform:translate(-50%,-50%) scale(0.238,0.333);border:0;"
+              style="
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                border: 0;
+              "
             ></iframe>
-
           </div>
-        </div>
 
-        <div style="text-align:center;font-size:15px;margin-bottom:10px;">
-          ${safeDesc}
-        </div>
+          <div style="
+            margin-top: 12px;
+            text-align: center;
+          ">
+            <a
+              href="${safeTikTokUrl}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="tiktok-link-btn"
+              style="
+                display: inline-block;
+                color: #6366f1;
+                text-decoration: none;
+                font-size: 15px;
+                font-weight: 700;
+                line-height: 1.5;
+              "
+            >Смотреть в TikTok ↗</a>
+          </div>
 
-        <div style="text-align:center;">
-          <a
-            href="${safeTikTokUrl}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="tiktok-link-btn"
-            style="color:#6366f1;text-decoration:none;font-size:14px;font-weight:bold;"
-          >Смотреть в TikTok ↗</a>
         </div>
-
       </li>
     `;
   }).join("");
 
   showScreen("results");
 }
-
 
 function packResults(ranking) {
   const indices = ranking.map(item =>
