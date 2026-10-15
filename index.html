@@ -162,15 +162,21 @@ function getTikTokHTML(index) {
 
 // ЭТУ ФУНКЦИЮ ПРОСТО ВСТАВЬ СРАЗУ НИЖЕ (она будет строкой 159 и далее)
 function cleanupVideosMemory() {
-  // Находим все айфреймы Гугл Диска, которые сейчас загружены в кнопках сортера
-  const oldIframes = document.querySelectorAll("#left-card iframe, #right-card iframe, button iframe, .sort-btn iframe");
-  oldIframes.forEach(iframe => {
-    try {
-      // Подменяем тяжелое видео на пустую страницу. Safari на iPhone выгружает кэш и освобождает ОЗУ!
-      iframe.src = "about:blank"; 
-      iframe.remove(); 
-    } catch (e) {
-      console.log("iFrame уже был очищен");
+  // берем именно твои переменные кнопок, которые используются в refreshSortUI
+  const containers = [btnLeft, btnRight];
+  
+  containers.forEach(container => {
+    if (container) {
+      // ищем айфреймы строго внутри этих двух кнопок
+      const iframes = container.querySelectorAll("iframe");
+      iframes.forEach(iframe => {
+        try {
+          iframe.src = "about:blank"; // разрываем связь с гугл диском
+          iframe.remove(); // удаляем элемент
+        } catch (e) {
+          console.log("ошибка очистки iframe:", e);
+        }
+      });
     }
   });
 }
