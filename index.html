@@ -122,10 +122,12 @@ function getTikTokHTML(index) {
   const item = tiktoks[index];
   if (!item) return "";
   
-const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
-  // Выносим логику ссылки наверх — здесь браузер точно не запутается
+  const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
+  
+  // Добавили onclick="event.stopPropagation();", чтобы при клике на текст открывался Тикток, 
+  // но сам баттл при этом не переключался дальше на следующее видео!
   const descHTML = item.tiktokUrl 
-    ? `<a href="${item.tiktokUrl}" target="_blank" class="tiktok-link">${item.desc}</a>` 
+    ? `<a href="${item.tiktokUrl}" target="_blank" class="tiktok-link" onclick="event.stopPropagation();">${item.desc}</a>` 
     : item.desc;
 
   return `
@@ -134,10 +136,11 @@ const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
       <!-- Контейнер-маска (9:16) -->
       <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.77%; overflow: hidden; background: #000; border-radius: 8px;">
         
-        <!-- Этот вариант раздвинет видео по ширине и уберет боковые полосы -->
+        <!-- Твой идеальный вариант с масштабированием, чтобы убрать полосы Гугла -->
         <iframe 
           src="${embedUrl}" 
           allow="autoplay" 
+          loading="lazy"
           style="
             position: absolute;
             top: 50%;
@@ -155,6 +158,21 @@ const embedUrl = `https://docs.google.com/file/d/${item.id}/preview`;
       <div class="desc" style="text-align: center; margin-top: 10px; font-size: 14px;">${descHTML}</div>
     </div>
   `;
+}
+
+// ЭТУ ФУНКЦИЮ ПРОСТО ВСТАВЬ СРАЗУ НИЖЕ (она будет строкой 159 и далее)
+function cleanupVideosMemory() {
+  // Находим все айфреймы Гугл Диска, которые сейчас загружены в кнопках сортера
+  const oldIframes = document.querySelectorAll("#left-card iframe, #right-card iframe, button iframe, .sort-btn iframe");
+  oldIframes.forEach(iframe => {
+    try {
+      // Подменяем тяжелое видео на пустую страницу. Safari на iPhone выгружает кэш и освобождает ОЗУ!
+      iframe.src = "about:blank"; 
+      iframe.remove(); 
+    } catch (e) {
+      console.log("iFrame уже был очищен");
+    }
+  });
 }
 
       function showError(message) {
@@ -175,42 +193,63 @@ function startSorting() {
 }
 
 
-      function handleChoice(choice) {
-        if (choice === "undo") {
-          if (logic.undo()) {
-            battleCount = Math.max(0, battleCount - 1);
-            refreshSortUI();
-          }
-          return;
-        }
+     function handleChoice(choice) {
+  if (choice === "undo") {
+    if (logic.undo()) {
+      battleCount = Math.max(0, battleCount - 1);
+      // Принудительно очищаем память старых плееров перед откатом раунда
+      cleanupVideosMemory();
+      refreshSortUI();
+    }
+    return;
+  }
 
-        logic.recordChoice(choice);
-        battleCount++;
-        refreshSortUI();
-      }
+  logic.recordChoice(choice);
+  battleCount++;
+  // Принудительно очищаем память старых плееров перед следующим раундом
+  cleanupVideosMemory();
+  refreshSortUI();
+}
 
-      function refreshSortUI() {
-        const pair = logic.getNextPair();
+// Новая супер-важная функция очистки оперативной памяти для iOS / Safari
+function cleanupVideosMemory() {
+  const oldVideos = document.querySelectorAll("#left-card video, #right-card video, button video, .sort-btn video");
+  oldVideos.forEach(video => {
+    try {
+      video.pause();
+      video.src = ""; // Опустошаем источник файла
+      video.removeAttribute("src"); // Полностью удаляем атрибут источника
+      video.load(); // Заставляем Safari принудительно сбросить буфер из ОЗУ
+    } catch (e) {
+      console.log("Видео уже было очищено или отсутствует");
+    }
+  });
+}
 
-        if (!pair) {
-          finalRanking = logic.getFinalRanking();
-          showResults(finalRanking);
-          return;
-        }
+function refreshSortUI() {
+  const pair = logic.getNextPair();
 
-          const [left, right] = pair;
+  if (!pair) {
+    // Чистим видео-память перед тем, как уйти на экран результатов
+    cleanupVideosMemory();
+    finalRanking = logic.getFinalRanking();
+    showResults(finalRanking);
+    return;
+  }
+
+  const [left, right] = pair;
+  
+  // Рендерим новые карточки. 
+  // ВАЖНО: убедись, что btnLeft и btnRight соответствуют твоим кнопкам выбора
   btnLeft.innerHTML = getTikTokHTML(left);
   btnRight.innerHTML = getTikTokHTML(right);
 
-        
-
-
-        battleLabel.textContent = `Battle #${battleCount + 1}`;
-        const progress = logic.getProgress();
-        progressText.textContent = `${Math.round(progress)}% sorted`;
-        progressFill.style.width = `${progress}%`;
-        btnUndo.disabled = !logic.canUndo();
-      }
+  battleLabel.textContent = `Battle #${battleCount + 1}`;
+  const progress = logic.getProgress();
+  progressText.textContent = `${Math.round(progress)}% sorted`;
+  progressFill.style.width = `${progress}%`;
+  btnUndo.disabled = !logic.canUndo();
+}
 
     class MergeSortLogic {
   constructor(items) {
@@ -321,7 +360,7 @@ function startSorting() {
   }
 }
 
- const tiktoks = [
+const tiktoks = [
   { id: "18N-Njj-LRWpk0yqyCcbCBUkks1ZBiimF", desc: "эмммммм я в восторге", tiktokUrl: "https://www.tiktok.com/t/ZTyhMcJKq/" },
   { id: "181wQbNYFEUkEwPsgyHk2w8jeXXfT0l8h", desc: "без комментариев", tiktokUrl: "https://www.tiktok.com/t/ZTyhMtRaT/" },
   { id: "1C6c5nOuWJawqZlM2V_h7IK6_Bh7krook", desc: "невероятно", tiktokUrl: "https://www.tiktok.com/t/ZTyhrkqRy/" },
@@ -366,26 +405,60 @@ function startSorting() {
   { id: "1XRDRAKeeTuPb58R9Kb4rprPiYKdKSadc", desc: " ??????? забоялись", tiktokUrl: "https://www.tiktok.com/t/ZTyhkMYtc/" },
   { id: "1vyFSOOVcLBkzVjHjshqVCmPafpg_Sq2D", desc: "утиное", tiktokUrl: "https://www.tiktok.com/t/ZTyhku2vy/" },
   { id: "1hInJsSY6hMERXpwI0L0_JMdjw5JBzq7Y", desc: "история повторяется", tiktokUrl: "https://www.tiktok.com/t/ZTyhkkQ49/" }
-]
-      
-      function showResults(ranking) {
-         resultsList.innerHTML = ranking
-    .map(
-      (item, i) =>
-        `<li><span class="rank">${i + 1}.</span> ${getTikTokHTML(item)}</li>`
-    )
+ { id: "1HZjefWc8kuHlkWh4n_J_m_z8Hwc7ePKe", desc: ".............", tiktokUrl: "https://www.tiktok.com/t/ZTyKFs7XU/" },
+  { id: "1fhGJpRigzoOiPz71blU0yOBhaHuF-kp6", desc: "это невероятно", tiktokUrl: "https://www.tiktok.com/t/ZTyKFKdVD/" },
+  { id: "1hP7iYgWIZwQ1f7uc_-fTpG20vuxEljoU", desc: "оюль....", tiktokUrl: "https://www.tiktok.com/t/ZTyKFty4C/" }
+];
+
+// Новая, ультра-легкая функция для отображения результатов
+function showResults(ranking) {
+  // Проверяем, что массив не пустой и содержит объекты, а не просто цифры
+  if (!ranking || ranking.length === 0 || typeof ranking[0] === 'number') {
+     console.error("Ошибка данных в результатах");
+     return;
+  }
+
+  resultsList.innerHTML = ranking
+    .map((item, i) => {
+      // Заменяем iFrame или плеер на легкую текстовую разметку с внешней кнопкой
+      return `
+        <li class="result-item">
+          <span class="rank">${i + 1}.</span> 
+          <div class="result-info">
+            <p class="result-desc">"${escapeHtml(item.desc)}"</p>
+            <a href="${item.tiktokUrl}" target="_blank" rel="noopener noreferrer" class="tiktok-link-btn">
+               Смотреть видео ↗
+            </a>
+          </div>
+        </li>
+      `;
+    })
     .join("");
 
-        showScreen("results");
-      }
-
-     function escapeHtml(text) {
-  return text;
+  showScreen("results");
 }
 
-// Функция для упаковки массива ID в короткую Base64 строку
+function escapeHtml(text) {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Функция для упаковки массива индексов в Base64 строку
 function packResults(arr) {
-  const bytes = new Uint8Array(arr);
+  // Превращаем массив объектов (или индексов) строго в массив индексов объектов из tiktoks
+  const indices = arr.map(item => {
+     if (typeof item === 'object') {
+        return tiktoks.findIndex(t => t.id === item.id);
+     }
+     return item;
+  });
+
+  const bytes = new Uint8Array(indices);
   let binary = '';
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i]);
@@ -393,18 +466,22 @@ function packResults(arr) {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+\$/, '');
 }
 
-// Функция для распаковки строки обратно в массив ID
+// ИСПРАВЛЕННАЯ функция распаковки: теперь она возвращает массив объектов, а не просто цифры!
 function unpackResults(str) {
   try {
-    // Восстанавливаем символы Base64
     let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
     while (base64.length % 4) { base64 += '='; }
     const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
+    
+    const objectsArray = [];
     for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
+      const index = binary.charCodeAt(i);
+      // Защита от выхода за пределы массива данных
+      if (tiktoks[index]) {
+         objectsArray.push(tiktoks[index]);
+      }
     }
-    return Array.from(bytes);
+    return objectsArray; // Возвращает полноценные объекты тиктоков!
   } catch (e) {
     console.error("Ошибка чтения ссылки результатов:", e);
     return null;
@@ -415,20 +492,24 @@ function saveResults() {
   const usernameInput = document.getElementById("username-input");
   const username = usernameInput ? usernameInput.value.trim() : "";
   
-  // Упаковываем массив чисел в компактную строку
+  // finalRanking должен содержать текущий отсортированный массив объектов
   const packedData = packResults(finalRanking);
   
   let shareUrl = `${window.location.origin}${window.location.pathname}?`;
   if (username) {
     shareUrl += `user=${encodeURIComponent(username)}&`;
   }
-  shareUrl += `r=${packedData}`; // Теперь параметр называется коротко 'r'
+  shareUrl += `r=${packedData}`;
   
   navigator.clipboard.writeText(shareUrl).then(() => {
     const btn = document.getElementById("save-btn");
-    const original = btn.textContent;
-    btn.textContent = "Link Copied!";
-    setTimeout(() => { btn.textContent = original; }, 2000);
+    if (btn) {
+       const original = btn.textContent;
+       btn.textContent = "Link Copied!";
+       setTimeout(() => { btn.textContent = original; }, 2000);
+    }
+  }).catch(err => {
+     console.error("Не удалось скопировать ссылку:", err);
   });
 }
 
